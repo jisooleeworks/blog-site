@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jisoo Lee</title>
+    <atom:link href="/blog-site/feed.xml" rel="self" type="application/rss+xml"/>
+    <link>http://localhost:4000/blog-site/</link>
+    <description>Data analytics blog</description>
+    <pubDate>Wed, 13 Jul 2022 10:24:29 -0700</pubDate>
+    
+      <item>
+        <title>What are associated with profitable movies?</title>
+        <link>/blog-site/2022/06/01/what-are-associated-with-profitable-movies.html</link>
+        <guid isPermaLink="true">/blog-site/2022/06/01/what-are-associated-with-profitable-movies.html</guid>
+        <description>&lt;p&gt;Using a &lt;a href=&quot;https://www.kaggle.com/datasets/juzershakir/tmdb-movies-dataset&quot;&gt;TMDb movie data set&lt;/a&gt; containing properties of movies released between 1960 and 2015, I explored what are related to financial success of movies, with visualizations.&lt;/p&gt;
+
+&lt;p&gt;In assessing financial success, I used &lt;strong&gt;Return on Investment (ROI)&lt;/strong&gt;, a measure commonly used in describing profitability. It is calculated by: ROI = (gross revenue - cost)/cost. Of the properties, I was most interested in &lt;strong&gt;budget, genres, and vote scores&lt;/strong&gt;. Specifically, I investigated:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Did high budget movies achieve high ROI?&lt;/li&gt;
+  &lt;li&gt;Did specific genres lead to high ROI?&lt;/li&gt;
+  &lt;li&gt;Did high score movies achieve high ROI?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The work process was:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#ch1&quot;&gt;Data overview&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ch2&quot;&gt;Data wrangling&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ch3&quot;&gt;Univariate exploration&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ch4&quot;&gt;Q1: Did high budget movies achieve high ROI?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ch5&quot;&gt;Q2: Did specific genres lead to high ROI?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ch6&quot;&gt;Q3: Did high score movies achieve high ROI?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ch7&quot;&gt;Conclusions (Summary, Limitations)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I will walk through the process here. You can see code and all details &lt;a href=&quot;https://github.com/jisooleeworks/blog-code/blob/main/tmdb_post.ipynb&quot;&gt;in my GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;data-overview&quot;&gt;Data overview&lt;a class=&quot;anchor&quot; id=&quot;ch1&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;After loading the data set, I looked at a couple of fundamental aspects.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;table border=&quot;1&quot; class=&quot;dataframe&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;id&lt;/th&gt;
+      &lt;th&gt;imdb_id&lt;/th&gt;
+      &lt;th&gt;popularity&lt;/th&gt;
+      &lt;th&gt;budget&lt;/th&gt;
+      &lt;th&gt;revenue&lt;/th&gt;
+      &lt;th&gt;original_title&lt;/th&gt;
+      &lt;th&gt;cast&lt;/th&gt;
+      &lt;th&gt;homepage&lt;/th&gt;
+      &lt;th&gt;director&lt;/th&gt;
+      &lt;th&gt;tagline&lt;/th&gt;
+      &lt;th&gt;keywords&lt;/th&gt;
+      &lt;th&gt;overview&lt;/th&gt;
+      &lt;th&gt;runtime&lt;/th&gt;
+      &lt;th&gt;genres&lt;/th&gt;
+      &lt;th&gt;production_companies&lt;/th&gt;
+      &lt;th&gt;release_date&lt;/th&gt;
+      &lt;th&gt;vote_count&lt;/th&gt;
+      &lt;th&gt;vote_average&lt;/th&gt;
+      &lt;th&gt;release_year&lt;/th&gt;
+      &lt;th&gt;budget_adj&lt;/th&gt;
+      &lt;th&gt;revenue_adj&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;135397&lt;/td&gt;
+      &lt;td&gt;tt0369610&lt;/td&gt;
+      &lt;td&gt;32.985763&lt;/td&gt;
+      &lt;td&gt;150000000&lt;/td&gt;
+      &lt;td&gt;1513528810&lt;/td&gt;
+      &lt;td&gt;Jurassic World&lt;/td&gt;
+      &lt;td&gt;Chris Pratt|Bryce Dallas Howard|Irrfan Khan|Vi...&lt;/td&gt;
+      &lt;td&gt;http://www.jurassicworld.com/&lt;/td&gt;
+      &lt;td&gt;Colin Trevorrow&lt;/td&gt;
+      &lt;td&gt;The park is open.&lt;/td&gt;
+      &lt;td&gt;monster|dna|tyrannosaurus rex|velociraptor|island&lt;/td&gt;
+      &lt;td&gt;Twenty-two years after the events of Jurassic ...&lt;/td&gt;
+      &lt;td&gt;124&lt;/td&gt;
+      &lt;td&gt;Action|Adventure|Science Fiction|Thriller&lt;/td&gt;
+      &lt;td&gt;Universal Studios|Amblin Entertainment|Legenda...&lt;/td&gt;
+      &lt;td&gt;6/9/15&lt;/td&gt;
+      &lt;td&gt;5562&lt;/td&gt;
+      &lt;td&gt;6.5&lt;/td&gt;
+      &lt;td&gt;2015&lt;/td&gt;
+      &lt;td&gt;1.379999e+08&lt;/td&gt;
+      &lt;td&gt;1.392446e+09&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;76341&lt;/td&gt;
+      &lt;td&gt;tt1392190&lt;/td&gt;
+      &lt;td&gt;28.419936&lt;/td&gt;
+      &lt;td&gt;150000000&lt;/td&gt;
+      &lt;td&gt;378436354&lt;/td&gt;
+      &lt;td&gt;Mad Max: Fury Road&lt;/td&gt;
+      &lt;td&gt;Tom Hardy|Charlize Theron|Hugh Keays-Byrne|Nic...&lt;/td&gt;
+      &lt;td&gt;http://www.madmaxmovie.com/&lt;/td&gt;
+      &lt;td&gt;George Miller&lt;/td&gt;
+      &lt;td&gt;What a Lovely Day.&lt;/td&gt;
+      &lt;td&gt;future|chase|post-apocalyptic|dystopia|australia&lt;/td&gt;
+      &lt;td&gt;An apocalyptic story set in the furthest reach...&lt;/td&gt;
+      &lt;td&gt;120&lt;/td&gt;
+      &lt;td&gt;Action|Adventure|Science Fiction|Thriller&lt;/td&gt;
+      &lt;td&gt;Village Roadshow Pictures|Kennedy Miller Produ...&lt;/td&gt;
+      &lt;td&gt;5/13/15&lt;/td&gt;
+      &lt;td&gt;6185&lt;/td&gt;
+      &lt;td&gt;7.1&lt;/td&gt;
+      &lt;td&gt;2015&lt;/td&gt;
+      &lt;td&gt;1.379999e+08&lt;/td&gt;
+      &lt;td&gt;3.481613e+08&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;262500&lt;/td&gt;
+      &lt;td&gt;tt2908446&lt;/td&gt;
+      &lt;td&gt;13.112507&lt;/td&gt;
+      &lt;td&gt;110000000&lt;/td&gt;
+      &lt;td&gt;295238201&lt;/td&gt;
+      &lt;td&gt;Insurgent&lt;/td&gt;
+      &lt;td&gt;Shailene Woodley|Theo James|Kate Winslet|Ansel...&lt;/td&gt;
+      &lt;td&gt;http://www.thedivergentseries.movie/#insurgent&lt;/td&gt;
+      &lt;td&gt;Robert Schwentke&lt;/td&gt;
+      &lt;td&gt;One Choice Can Destroy You&lt;/td&gt;
+      &lt;td&gt;based on novel|revolution|dystopia|sequel|dyst...&lt;/td&gt;
+      &lt;td&gt;Beatrice Prior must confront her inner demons ...&lt;/td&gt;
+      &lt;td&gt;119&lt;/td&gt;
+      &lt;td&gt;Adventure|Science Fiction|Thriller&lt;/td&gt;
+      &lt;td&gt;Summit Entertainment|Mandeville Films|Red Wago...&lt;/td&gt;
+      &lt;td&gt;3/18/15&lt;/td&gt;
+      &lt;td&gt;2480&lt;/td&gt;
+      &lt;td&gt;6.3&lt;/td&gt;
+      &lt;td&gt;2015&lt;/td&gt;
+      &lt;td&gt;1.012000e+08&lt;/td&gt;
+      &lt;td&gt;2.716190e+08&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt;140607&lt;/td&gt;
+      &lt;td&gt;tt2488496&lt;/td&gt;
+      &lt;td&gt;11.173104&lt;/td&gt;
+      &lt;td&gt;200000000&lt;/td&gt;
+      &lt;td&gt;2068178225&lt;/td&gt;
+      &lt;td&gt;Star Wars: The Force Awakens&lt;/td&gt;
+      &lt;td&gt;Harrison Ford|Mark Hamill|Carrie Fisher|Adam D...&lt;/td&gt;
+      &lt;td&gt;http://www.starwars.com/films/star-wars-episod...&lt;/td&gt;
+      &lt;td&gt;J.J. Abrams&lt;/td&gt;
+      &lt;td&gt;Every generation has a story.&lt;/td&gt;
+      &lt;td&gt;android|spaceship|jedi|space opera|3d&lt;/td&gt;
+      &lt;td&gt;Thirty years after defeating the Galactic Empi...&lt;/td&gt;
+      &lt;td&gt;136&lt;/td&gt;
+      &lt;td&gt;Action|Adventure|Science Fiction|Fantasy&lt;/td&gt;
+      &lt;td&gt;Lucasfilm|Truenorth Productions|Bad Robot&lt;/td&gt;
+      &lt;td&gt;12/15/15&lt;/td&gt;
+      &lt;td&gt;5292&lt;/td&gt;
+      &lt;td&gt;7.5&lt;/td&gt;
+      &lt;td&gt;2015&lt;/td&gt;
+      &lt;td&gt;1.839999e+08&lt;/td&gt;
+      &lt;td&gt;1.902723e+09&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt;168259&lt;/td&gt;
+      &lt;td&gt;tt2820852&lt;/td&gt;
+      &lt;td&gt;9.335014&lt;/td&gt;
+      &lt;td&gt;190000000&lt;/td&gt;
+      &lt;td&gt;1506249360&lt;/td&gt;
+      &lt;td&gt;Furious 7&lt;/td&gt;
+      &lt;td&gt;Vin Diesel|Paul Walker|Jason Statham|Michelle ...&lt;/td&gt;
+      &lt;td&gt;http://www.furious7.com/&lt;/td&gt;
+      &lt;td&gt;James Wan&lt;/td&gt;
+      &lt;td&gt;Vengeance Hits Home&lt;/td&gt;
+      &lt;td&gt;car race|speed|revenge|suspense|car&lt;/td&gt;
+      &lt;td&gt;Deckard Shaw seeks revenge against Dominic Tor...&lt;/td&gt;
+      &lt;td&gt;137&lt;/td&gt;
+      &lt;td&gt;Action|Crime|Thriller&lt;/td&gt;
+      &lt;td&gt;Universal Pictures|Original Film|Media Rights ...&lt;/td&gt;
+      &lt;td&gt;4/1/15&lt;/td&gt;
+      &lt;td&gt;2947&lt;/td&gt;
+      &lt;td&gt;7.3&lt;/td&gt;
+      &lt;td&gt;2015&lt;/td&gt;
+      &lt;td&gt;1.747999e+08&lt;/td&gt;
+      &lt;td&gt;1.385749e+09&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;notebook_output&quot;&gt;
+&lt;pre&gt;&amp;lt;class &amp;#39;pandas.core.frame.DataFrame&amp;#39;&amp;gt;
+RangeIndex: 10866 entries, 0 to 10865
+Data columns (total 21 columns):
+ #   Column                Non-Null Count  Dtype  
+---  ------                --------------  -----  
+ 0   id                    10866 non-null  int64  
+ 1   imdb_id               10856 non-null  object 
+ 2   popularity            10866 non-null  float64
+ 3   budget                10866 non-null  int64  
+ 4   revenue               10866 non-null  int64  
+ 5   original_title        10866 non-null  object 
+ 6   cast                  10790 non-null  object 
+ 7   homepage              2936 non-null   object 
+ 8   director              10822 non-null  object 
+ 9   tagline               8042 non-null   object 
+ 10  keywords              9373 non-null   object 
+ 11  overview              10862 non-null  object 
+ 12  runtime               10866 non-null  int64  
+ 13  genres                10843 non-null  object 
+ 14  production_companies  9836 non-null   object 
+ 15  release_date          10866 non-null  object 
+ 16  vote_count            10866 non-null  int64  
+ 17  vote_average          10866 non-null  float64
+ 18  release_year          10866 non-null  int64  
+ 19  budget_adj            10866 non-null  float64
+ 20  revenue_adj           10866 non-null  float64
+dtypes: float64(4), int64(6), object(11)
+memory usage: 1.7+ MB
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The data set had 10866 records with 21 columns. Some columns, like ‘cast’ and ‘genres’, contained multiple values separated by pipe characters. With regard to budget and revenue, the data set had both original and inflation adjusted value column. I chose to use the inflation adjusted ones.&lt;/p&gt;
+
+&lt;h1 id=&quot;data-wrangling&quot;&gt;Data wrangling&lt;a class=&quot;anchor&quot; id=&quot;ch2&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;In this step, I dealt with:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Duplicates&lt;/li&gt;
+  &lt;li&gt;Missing values&lt;/li&gt;
+  &lt;li&gt;Unused columns&lt;/li&gt;
+  &lt;li&gt;Incorrect values&lt;/li&gt;
+  &lt;li&gt;Extraction of a variable of interest (i.e., ROI)&lt;/li&gt;
+  &lt;li&gt;Data type&lt;/li&gt;
+  &lt;li&gt;Outliers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;duplicates&quot;&gt;Duplicates&lt;/h2&gt;
+&lt;p&gt;First of all, I examined if there were any duplicate records by checking for (1) duplicate id values, and (2) records with the same ‘title’, ‘director’, ‘release_year’, and ‘runtime’.&lt;/p&gt;
+
+&lt;h3 id=&quot;based-on-id&quot;&gt;Based on ‘id’&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;duplicated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;id&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;table style=&quot;border:1;height:280px;&quot; class=&quot;dataframe&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&quot;text-align: right;&quot;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;id&lt;/th&gt;
+      &lt;th&gt;imdb_id&lt;/th&gt;
+      &lt;th&gt;popularity&lt;/th&gt;
+      &lt;th&gt;budget&lt;/th&gt;
+      &lt;th&gt;revenue&lt;/th&gt;
+      &lt;th&gt;original_title&lt;/th&gt;
+      &lt;th&gt;cast&lt;/th&gt;
+      &lt;th&gt;homepage&lt;/th&gt;
+      &lt;th&gt;director&lt;/th&gt;
+      &lt;th&gt;tagline&lt;/th&gt;
+      &lt;th&gt;keywords&lt;/th&gt;
+      &lt;th&gt;overview&lt;/th&gt;
+      &lt;th&gt;runtime&lt;/th&gt;
+      &lt;th&gt;genres&lt;/th&gt;
+      &lt;th&gt;production_companies&lt;/th&gt;
+      &lt;th&gt;release_date&lt;/th&gt;
+      &lt;th&gt;vote_count&lt;/th&gt;
+      &lt;th&gt;vote_average&lt;/th&gt;
+      &lt;th&gt;release_year&lt;/th&gt;
+      &lt;th&gt;budget_adj&lt;/th&gt;
+      &lt;th&gt;revenue_adj&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2089&lt;/th&gt;
+      &lt;td&gt;42194&lt;/td&gt;
+      &lt;td&gt;tt0411951&lt;/td&gt;
+      &lt;td&gt;0.59643&lt;/td&gt;
+      &lt;td&gt;30000000&lt;/td&gt;
+      &lt;td&gt;967000&lt;/td&gt;
+      &lt;td&gt;TEKKEN&lt;/td&gt;
+      &lt;td&gt;Jon Foo|Kelly Overton|Cary-Hiroyuki Tagawa|Ian...&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;Dwight H. Little&lt;/td&gt;
+      &lt;td&gt;Survival is no game&lt;/td&gt;
+      &lt;td&gt;martial arts|dystopia|based on video game|mart...&lt;/td&gt;
+      &lt;td&gt;In the year of 2039, after World Wars destroy ...&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+      &lt;td&gt;Crime|Drama|Action|Thriller|Science Fiction&lt;/td&gt;
+      &lt;td&gt;Namco|Light Song Films&lt;/td&gt;
+      &lt;td&gt;3/20/10&lt;/td&gt;
+      &lt;td&gt;110&lt;/td&gt;
+      &lt;td&gt;5.0&lt;/td&gt;
+      &lt;td&gt;2010&lt;/td&gt;
+      &lt;td&gt;30000000.0&lt;/td&gt;
+      &lt;td&gt;967000.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2090&lt;/th&gt;
+      &lt;td&gt;42194&lt;/td&gt;
+      &lt;td&gt;tt0411951&lt;/td&gt;
+      &lt;td&gt;0.59643&lt;/td&gt;
+      &lt;td&gt;30000000&lt;/td&gt;
+      &lt;td&gt;967000&lt;/td&gt;
+      &lt;td&gt;TEKKEN&lt;/td&gt;
+      &lt;td&gt;Jon Foo|Kelly Overton|Cary-Hiroyuki Tagawa|Ian...&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+      &lt;td&gt;Dwight H. Little&lt;/td&gt;
+      &lt;td&gt;Survival is no game&lt;/td&gt;
+      &lt;td&gt;martial arts|dystopia|based on video game|mart...&lt;/td&gt;
+      &lt;td&gt;In the year of 2039, after World Wars destroy ...&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+      &lt;td&gt;Crime|Drama|Action|Thriller|Science Fiction&lt;/td&gt;
+      &lt;td&gt;Namco|Light Song Films&lt;/td&gt;
+      &lt;td&gt;3/20/10&lt;/td&gt;
+      &lt;td&gt;110&lt;/td&gt;
+      &lt;td&gt;5.0&lt;/td&gt;
+      &lt;td&gt;2010&lt;/td&gt;
+      &lt;td&gt;30000000.0&lt;/td&gt;
+      &lt;td&gt;967000.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Two records were detected, identical for all the variables. So, an extra was deleted.&lt;/p&gt;
+
+&lt;h3 id=&quot;based-on-title-director-release_year-and-runtime&quot;&gt;Based on ‘title’, ‘director’, ‘release_year’, and ‘runtime’&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;duplicated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;original_title&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;director&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;\
+    &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;original_title&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;director&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;release_year&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;runtime&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort_values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;original_title&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;table style=&quot;border:1;height:260px;&quot; class=&quot;dataframe&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&quot;text-align: right;&quot;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;original_title&lt;/th&gt;
+      &lt;th&gt;director&lt;/th&gt;
+      &lt;th&gt;release_year&lt;/th&gt;
+      &lt;th&gt;runtime&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1400&lt;/th&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;Shane Acker&lt;/td&gt;
+      &lt;td&gt;2009&lt;/td&gt;
+      &lt;td&gt;79&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6514&lt;/th&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;Shane Acker&lt;/td&gt;
+      &lt;td&gt;2005&lt;/td&gt;
+      &lt;td&gt;11&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4337&lt;/th&gt;
+      &lt;td&gt;Bottle Rocket&lt;/td&gt;
+      &lt;td&gt;Wes Anderson&lt;/td&gt;
+      &lt;td&gt;1994&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;8547&lt;/th&gt;
+      &lt;td&gt;Bottle Rocket&lt;/td&gt;
+      &lt;td&gt;Wes Anderson&lt;/td&gt;
+      &lt;td&gt;1996&lt;/td&gt;
+      &lt;td&gt;91&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4451&lt;/th&gt;
+      &lt;td&gt;Frankenweenie&lt;/td&gt;
+      &lt;td&gt;Tim Burton&lt;/td&gt;
+      &lt;td&gt;2012&lt;/td&gt;
+      &lt;td&gt;87&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7943&lt;/th&gt;
+      &lt;td&gt;Frankenweenie&lt;/td&gt;
+      &lt;td&gt;Tim Burton&lt;/td&gt;
+      &lt;td&gt;1984&lt;/td&gt;
+      &lt;td&gt;29&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4063&lt;/th&gt;
+      &lt;td&gt;Madea&apos;s Family Reunion&lt;/td&gt;
+      &lt;td&gt;Tyler Perry&lt;/td&gt;
+      &lt;td&gt;2002&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;6701&lt;/th&gt;
+      &lt;td&gt;Madea&apos;s Family Reunion&lt;/td&gt;
+      &lt;td&gt;Tyler Perry&lt;/td&gt;
+      &lt;td&gt;2006&lt;/td&gt;
+      &lt;td&gt;110&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;5202&lt;/th&gt;
+      &lt;td&gt;Saw&lt;/td&gt;
+      &lt;td&gt;James Wan&lt;/td&gt;
+      &lt;td&gt;2003&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;7011&lt;/th&gt;
+      &lt;td&gt;Saw&lt;/td&gt;
+      &lt;td&gt;James Wan&lt;/td&gt;
+      &lt;td&gt;2004&lt;/td&gt;
+      &lt;td&gt;103&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The output shows that some movies have another movie with the same title/director/release_year. With online search, I learned that this happens sometimes; e.g., a director makes a ‘mini’ version before the full scale. So I kept all the records.&lt;/p&gt;
+
+&lt;h2 id=&quot;missing-values&quot;&gt;Missing values&lt;/h2&gt;
+&lt;p&gt;The ‘genre’ had only 23 nulls, but there were many records with 0 value for the budget and/or revenue. I had to remove all the records that belonged to any of the following:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;null for ‘genre’&lt;/li&gt;
+  &lt;li&gt;0 for ‘budget_adj’&lt;/li&gt;
+  &lt;li&gt;0 for ‘revenue_adj’&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;incorrect-values&quot;&gt;Incorrect values&lt;/h2&gt;
+&lt;p&gt;As a minimum effort to ensure correctness of budget and revenue values, I inspected data points at both ends (the lowest and highest).&lt;/p&gt;
+
+&lt;h3 id=&quot;top-budget-movie&quot;&gt;Top budget movie&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;budget_adj&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;budget_adj&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;table style=&quot;border: 1; height: 68px;&quot; class=&quot;dataframe&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&quot;text-align: right;&quot;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;id&lt;/th&gt;
+      &lt;th&gt;budget&lt;/th&gt;
+      &lt;th&gt;revenue&lt;/th&gt;
+      &lt;th&gt;original_title&lt;/th&gt;
+      &lt;th&gt;genres&lt;/th&gt;
+      &lt;th&gt;vote_average&lt;/th&gt;
+      &lt;th&gt;release_year&lt;/th&gt;
+      &lt;th&gt;budget_adj&lt;/th&gt;
+      &lt;th&gt;revenue_adj&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2244&lt;/th&gt;
+      &lt;td&gt;46528&lt;/td&gt;
+      &lt;td&gt;425000000&lt;/td&gt;
+      &lt;td&gt;11087569&lt;/td&gt;
+      &lt;td&gt;The Warrior&apos;s Way&lt;/td&gt;
+      &lt;td&gt;Adventure|Fantasy|Action|Western|Thriller&lt;/td&gt;
+      &lt;td&gt;6.4&lt;/td&gt;
+      &lt;td&gt;2010&lt;/td&gt;
+      &lt;td&gt;425000000.0&lt;/td&gt;
+      &lt;td&gt;11087569.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Although the above says that ‘The Warrior’s Way’ is the highest budget movie by 425 million, online search revealed that the budget of it is 42.5 million. After this correction, the highest budget became $368 millon of ‘Pirates of the Caribbean: On Stranger Tides,’ which is correct.&lt;/p&gt;
+
+&lt;h3 id=&quot;top-revenue-movie&quot;&gt;Top revenue movie&lt;/h3&gt;
+&lt;p&gt;‘Avartar’ came out as the highest revenue movie, and online search confirmed it.&lt;/p&gt;
+
+&lt;h3 id=&quot;bottom-budget-movie&quot;&gt;Bottom budget movie&lt;/h3&gt;
+&lt;p&gt;I displayed several lowest budget movies, and got puzzled with extremely low values like $1, $50, or ‘$100. I did online search and found that:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;‘Primer (2004)’ is considered as the lowest budget movie (https://en.wikipedia.org/wiki/Low-budget_film)&lt;/li&gt;
+  &lt;li&gt;Many of the low budget values are wrong; for example, the budget of ‘Lost &amp;amp; Found (1999)’ is $30 million, not $1.3, ‘Joyful Noise (2012)’, $25 millon, not $23, ‘Weekend (2011)’, $0.14 millon, not $7755, etc. 
+With the above findings, I inclined to believe that $8081, budget of ‘Primer (2004)’, should be the lowest. I removed movies whose budget was lower than it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;bottom-revenue-movie&quot;&gt;Bottom revenue movie&lt;/h3&gt;
+&lt;p&gt;Again, online search made me distrust data points whose revenue was lower than the revenue of ‘Best Man Down’ ($1840.6). They were removed.&lt;/p&gt;
+
+&lt;h2 id=&quot;data-type&quot;&gt;Data type&lt;/h2&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;genres&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;genres&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;|&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Values of ‘genres’ transformed from string to list, e.g., Action|Adventure|Science Fiction –&amp;gt; [Action, Adventure, Science Fiction], for convenience in later analysis.&lt;/p&gt;
+
+&lt;h2 id=&quot;outliers&quot;&gt;Outliers&lt;/h2&gt;
+&lt;p&gt;Fundamentally, I identified records that might inhibit finding a general direction by looking into each variable, and removed them.&lt;/p&gt;
+
+&lt;h3 id=&quot;budget&quot;&gt;Budget&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/ol_budget.png&quot; alt=&quot;Boxplot of budget&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Several records on the top stand out, but I considered them still continuous.&lt;/p&gt;
+
+&lt;h3 id=&quot;number-of-movies-by-genres&quot;&gt;Number of movies by genres&lt;/h3&gt;
+&lt;p&gt;For each genre, I calculated the number of movies involving it.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Generate a long format dataframe 
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df_long&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;explode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;genres&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Count the number of inclusion of each genre.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df_long&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;genres&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value_counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;notebook_output&quot;&gt;
+&lt;pre&gt;
+Drama              1746
+Comedy             1347
+Thriller           1197
+Action             1078
+Adventure           746
+Romance             660
+Crime               649
+Science Fiction     518
+Horror              460
+Family              423
+Fantasy             393
+Mystery             344
+Animation           200
+Music               134
+History             129
+War                 119
+Western              52
+Documentary          34
+Foreign              13
+TV Movie              1
+Name: genres, dtype: int64
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I noted that the bottom four genres are involved by a quite small number of movies, less than 100. The number of Western-involved movies is fewer than the half of War-involved movies. I decided to exclude these genres.&lt;/p&gt;
+
+&lt;h3 id=&quot;vote-scores&quot;&gt;Vote scores&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/ol_vote.png&quot; alt=&quot;Boxplot of vote score&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Judging that it is so far away from the nearest, I removed the data point with the lowest value.&lt;/p&gt;
+
+&lt;h3 id=&quot;rois&quot;&gt;ROIs&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/ol_ROI.png&quot; alt=&quot;Boxplot of ROI&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The top two data points were considered too far away that I removed them.&lt;/p&gt;
+
+&lt;p&gt;To sum up, the data wrangling step removed 7138 records leaving 3728 records in total. The largest removal, 7011 records, was due to value missingness.&lt;/p&gt;
+
+&lt;h1 id=&quot;univariate-exploration&quot;&gt;Univariate Exploration&lt;a class=&quot;anchor&quot; id=&quot;ch3&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;I surveyed the variables, budget, ROI, genres, and vote score, individually, before looking at relationships between them.&lt;/p&gt;
+
+&lt;h2 id=&quot;budget-1&quot;&gt;Budget&lt;/h2&gt;
+&lt;p&gt;The budget is long right tailed, ranging from $8081 to $368 millon (redline for median).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/uni_budget.png&quot; alt=&quot;Budget histogram (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For later analysis, I categorized values into four groups as follows.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;qt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;budget_adj&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quantile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;binning4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;qt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Low&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;qt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;qt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Moderate&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;qt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;qt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]):&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;Little High&apos;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;qt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.75&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;High&apos;&lt;/span&gt;
+    
+&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;budget_level&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;budget_adj&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;binning4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/uni_budget_level.png&quot; alt=&quot;Median and Mean of Budget by Budget Level (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;roi&quot;&gt;ROI&lt;/h2&gt;
+&lt;p&gt;The ROI column is extremely long tailed, ranging from -1 to 699. More than 3500 out of 3728 fall into between -1 and 22.3 as shown below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/uni_roi_histogram.png&quot; alt=&quot;ROI histogram (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I categorized the ROI in the same way to the budget.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/uni_roi_levels.png&quot; alt=&quot;Median and Mean of ROI by ROI Level (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;genres&quot;&gt;Genres&lt;/h2&gt;
+&lt;p&gt;I plotted the percentage of movies involving each genre. It shows that almost the half of movies involved ‘Drama’, and ‘Comedy’ is the next most involved genre by about %35.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/uni_genres.png&quot; alt=&quot;Percentage of movies by genre (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;vote-score&quot;&gt;Vote score&lt;/h2&gt;
+&lt;p&gt;The vote score seems normally distributed (mean = 6.2, SD = 0.8).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/uni_vote.png&quot; alt=&quot;Histogram of vote scores (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;q1-did-high-budget-movies-achieve-high-roi&quot;&gt;Q1: Did high budget movies achieve high ROI?&lt;a class=&quot;anchor&quot; id=&quot;ch4&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;I plotted a scatter plot (top), ROI distribution by budget level (bottom-left), and median value by budget level (bottom right).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/bi_budget_ROI_plots.png&quot; alt=&quot;Budget and ROI plots (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It is hard to find a relationship in the scatter plot. But, the boxplot by the budget level shows that ROI values of low budget movies span a wide range, up to 500, the largest ROI value in the dataset. The larger budget groups have the narrower spread of ROIs. As well, the comparison of median values shows that the low and high budget levels have a little higher median values than the moderate and little high budget levels.&lt;/p&gt;
+
+&lt;p&gt;Meanwhile, I created a contigency table and plotted it as below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/bi_budget_ROI_con.png&quot; alt=&quot;Number of movies by ROI level for each budget level&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It is found that low budget movies achieve the low and high level ROIs more frequently than the moderate and little high level ROIs. As opposed to it, high budget movies obtain the moderate and little high level ROIs more frequenlty.&lt;/p&gt;
+
+&lt;h1 id=&quot;q2-did-specific-genres-lead-to-high-roi&quot;&gt;Q2: Did specific genres lead to high ROI?&lt;a class=&quot;anchor&quot; id=&quot;ch5&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;To compare ROIs between the genres, I calculated two types of means:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Simple mean: Simply add up all ROIs and divide it with the total number of movies involving that genre.&lt;/li&gt;
+  &lt;li&gt;Weighted mean: Assign weights based on the number genre types involved in a movie. A ROI is multiplied by 1/number_of_genres and the sum is divided by the sum of 1/number_of_genres values.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For example, let’s assume we have a long format dataframe of three movies as below:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;id&lt;/th&gt;
+      &lt;th&gt;genre&lt;/th&gt;
+      &lt;th&gt;ROI&lt;/th&gt;
+      &lt;th&gt;number of genres&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;drama&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;comedy&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;comedy&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;drama&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Simple means are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;drama, (3+2) / 2 = 2.5&lt;/li&gt;
+  &lt;li&gt;comedy, (3+5) / 2 = 4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Weighted means are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;drama, (3x1/2+2x1/1) / (1/2+1) = (1.5+2) / 1.5 = 2.33&lt;/li&gt;
+  &lt;li&gt;comedy, (3x1/2+5x1/1) / (1/2+1) = (1.5+5) / 1.5 = 4.33&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The below shows results of the two methods. The results are not exactly the same (especailly, ‘Horror’ has a larger difference between the two results than other genrens), but  order is the same.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/bi_genre.png&quot; alt=&quot;Mean of ROIs by genre (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The results hints that ‘Horror’ tends to bring quite larger ROIs compared to the others. The next profitable genre is ‘Music’ by round 4 or 5 smaller ROI than Horror. ROI values gradually decrease after ‘Music, and thus the difference between ‘Music’ and ‘History’ is only about 3.5.&lt;/p&gt;
+
+&lt;p&gt;Although I believe that I obtained an acceptable finding with my approach, it is a shame that effect of combination of genres was not studied. This issue will be discussed a bit more in ‘Limitations’ section at the end.&lt;/p&gt;
+
+&lt;h1 id=&quot;q3-did-high-score-movies-achieve-high-roi&quot;&gt;Q3: Did high score movies achieve high ROI?&lt;a class=&quot;anchor&quot; id=&quot;ch6&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-06-01-what-are-associated-with-profitable-movies/bi_vote.png&quot; alt=&quot;Vote score distribution by ROI level (Cleaned Dataset)&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The chart shows that the high ROI level tends to bring a little higher median of vote scores (0.4 higher than the little high level, and 0.7 than the low level).&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusions&quot;&gt;Conclusions&lt;a class=&quot;anchor&quot; id=&quot;ch7&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
+
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;With the exploration, I found association between 1) budget size and ROI, 2) genres and ROI, and 3) vote average score and ROI. To sum up:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;I found contrary behavior between the low and high budget groups, in terms of their ROIs. Low budget movies are more likely to be big fail or big success, and high budget movies tend to end up in the middle. This behavior seems a consequence. Considering different capabilities in reaching the audience and the definition of ROI, this behavior seems natural.&lt;/li&gt;
+  &lt;li&gt;The genre type that resulted in the highest ROI on average is ‘Horror’, and the smallest ROI, ‘History’,  among 17 genre types (excluding ‘Western’, ‘Documentary’, ‘Foreign’, and ‘TV Movie’).&lt;/li&gt;
+  &lt;li&gt;It was found that the higher ROI level group tend to associate with higher mean of the vote average.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Based on these findings, it is considered that production of low budget, horror movies that receive high score from the audience is likely to lead to high ROI.&lt;/p&gt;
+
+&lt;h2 id=&quot;limitations&quot;&gt;Limitations&lt;/h2&gt;
+&lt;p&gt;The exploration has several limitations as follows:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Only about a third of the original datapoints were used in the analysis, since the rest had missing or outlying values. As well, there was no further work to check if any pattern exists in missing or outlying values.&lt;/li&gt;
+  &lt;li&gt;In finding association between genres and ROIs, potential effect of genre combination was not explored, and it makes the result somewhat insecure. For instance, let’s assume the following dataset of four movies:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;id&lt;/th&gt;
+      &lt;th&gt;genres&lt;/th&gt;
+      &lt;th&gt;ROI&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;Drama&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;Drama, Family&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;Drama, Horror&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;Family&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Calculation of weighted means (Drama, 5; Family, 4; Horor, 8) indicates that the highest ROI genre is Horror. However, it is not sure if this is the power of the Horror genre or result of pairing with Drama, since it does not have movies that involve only Horror.&lt;/p&gt;
+
+&lt;h2 id=&quot;additional-research-questions&quot;&gt;Additional research questions&lt;/h2&gt;
+&lt;p&gt;The following presents questions whose answers may reveal deeper knowledge on relationships between the properties:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Is there association between budgets and genre types?&lt;/li&gt;
+  &lt;li&gt;Is there association between budgets and vote scores?&lt;/li&gt;
+  &lt;li&gt;Is there association between genre types and vote scores?&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 01 Jun 2022 00:00:00 -0700</pubDate>
+      </item>
+    
+  </channel>
+</rss>
