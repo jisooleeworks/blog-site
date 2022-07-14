@@ -5,7 +5,7 @@
     <atom:link href="/blog-site/feed.xml" rel="self" type="application/rss+xml"/>
     <link>http://localhost:4000/blog-site/</link>
     <description>Data analytics blog</description>
-    <pubDate>Wed, 13 Jul 2022 10:24:29 -0700</pubDate>
+    <pubDate>Thu, 14 Jul 2022 13:50:18 -0700</pubDate>
     
       <item>
         <title>What are associated with profitable movies?</title>
@@ -678,7 +678,6 @@ Name: genres, dtype: int64
 &lt;h1 id=&quot;conclusions&quot;&gt;Conclusions&lt;a class=&quot;anchor&quot; id=&quot;ch7&quot;&gt;&lt;/a&gt;&lt;/h1&gt;
 
 &lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
-
 &lt;p&gt;With the exploration, I found association between 1) budget size and ROI, 2) genres and ROI, and 3) vote average score and ROI. To sum up:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;I found contrary behavior between the low and high budget groups, in terms of their ROIs. Low budget movies are more likely to be big fail or big success, and high budget movies tend to end up in the middle. This behavior seems a consequence. Considering different capabilities in reaching the audience and the definition of ROI, this behavior seems natural.&lt;/li&gt;
@@ -728,14 +727,6 @@ Name: genres, dtype: int64
 &lt;/table&gt;
 
 &lt;p&gt;Calculation of weighted means (Drama, 5; Family, 4; Horor, 8) indicates that the highest ROI genre is Horror. However, it is not sure if this is the power of the Horror genre or result of pairing with Drama, since it does not have movies that involve only Horror.&lt;/p&gt;
-
-&lt;h2 id=&quot;additional-research-questions&quot;&gt;Additional research questions&lt;/h2&gt;
-&lt;p&gt;The following presents questions whose answers may reveal deeper knowledge on relationships between the properties:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Is there association between budgets and genre types?&lt;/li&gt;
-  &lt;li&gt;Is there association between budgets and vote scores?&lt;/li&gt;
-  &lt;li&gt;Is there association between genre types and vote scores?&lt;/li&gt;
-&lt;/ul&gt;
 </description>
         <pubDate>Wed, 01 Jun 2022 00:00:00 -0700</pubDate>
       </item>
