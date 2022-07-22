@@ -81,10 +81,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
 
-
-markdown: kramdown
-highlighter: rouge
-
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+  math_engine: katex

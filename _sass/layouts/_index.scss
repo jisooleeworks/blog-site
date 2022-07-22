@@ -24,7 +24,10 @@
     display: inline-block;
     background-size: $feature-image-size;
     border-bottom: 1px solid $border-color;
-    p a {
+    // p a {
+    //   @extend .body-link;
+    // }
+    a {
       @extend .body-link;
     }
   }

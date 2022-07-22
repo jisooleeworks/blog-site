@@ -17,6 +17,9 @@ article {
   header {
     margin-bottom: 6%;
     text-align: center;
+    h1{
+      font-size: 2.2em;
+    }
   }
   a {
     @extend .body-link;

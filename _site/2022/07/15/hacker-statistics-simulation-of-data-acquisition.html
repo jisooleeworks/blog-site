@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+	<meta charset="utf-8">
+	<title>Hacker Statistics, simulation of data acquisition | Jisoo Lee</title>
+	<meta name="description"
+		content="I will share the concept and applications of “hacker statistics”, an approach for statistical inference. I first try to identify its definition, and then pre...">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="/blog-site/assets/css/main.css">
+
+	<!--Favicon-->
+	<link rel="shortcut icon" href="/blog-site/assets/favicon.ico" type="image/x-icon">
+
+	<!-- Canonical -->
+	<link rel="canonical" href="/blog-site/2022/07/15/hacker-statistics-simulation-of-data-acquisition.html">
+
+	<!-- RSS -->
+	<link rel="alternate" type="application/atom+xml" title="Jisoo Lee"
+		href="/blog-site/feed.xml" />
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+	<!-- Google Fonts -->
+	
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic" rel="stylesheet"
+		type="text/css">
+	
+
+	<!-- KaTeX -->
+	
+	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css"
+		integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+
+	<script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"
+		integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ"
+		crossorigin="anonymous"></script> -->
+
+	 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"> -->
+	 
+	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+	 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+	 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
+	 <script>
+		 document.addEventListener("DOMContentLoaded", function() {
+			 renderMathInElement(document.body, {
+				 // ...options...
+			 });
+		 });
+	 </script>
+	
+
+	<!-- Google Analytics -->
+	
+
+<!-- Begin section for dataframe table formatting -->
+<style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+		overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 0.7em;
+        line-height: 1.2;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 0.3em;
+    }
+    table.dataframe td {
+      padding: 0.3em;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+
+
+	table.dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    table.dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    table.dataframe thead th {
+        text-align: left;
+    }
+
+	.notebook_output pre {
+		font-size: 0.8em;
+		border: 1;
+		line-height: 1.2;
+	}
+
+	.highlighter-rouge pre{
+		margin-bottom: 1.5em;
+		padding: 1.2em;
+	}
+
+</style>
+<!-- End section for dataframe table formatting -->
+
+</head>
+  <body>
+    <header class="site-header">
+	<div class="branding">
+		
+		<h1 class="site-title">
+			<a href="/blog-site/">Jisoo Lee</a>
+		</h1>
+	</div>
+	<nav class="site-nav">
+		<ul>
+			
+			
+			
+			
+			
+			<li>
+				<a class="page-link" href="/blog-site/about/">
+					About
+				</a>
+			</li>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- Social icons from Font Awesome, if enabled  -->
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/jisooleeworks" title="Follow on GitHub">
+		<i class="fab fa-fw fa-github"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Search bar -->
+            
+		</ul>
+	</nav>
+
+</header>
+
+    <div class="content">
+      <article >
+  <header style="background-image: url('/blog-site/')">
+    <h1 class="title">Hacker Statistics, simulation of data acquisition</h1>
+    
+    <p class="meta">
+      July 15, 2022
+      
+    </p>
+  </header>
+  <section class="post-content"><p>I will share the concept and applications of “hacker statistics”, an approach for statistical inference. I first try to identify its definition, and then present several examples that apply it. It is considered a quite versitile tool, although there remain a number of questions to study further.</p>
+
+<p>What is hacker statistics? My online search did not bring much information on it, and it looks like  there is no established definition. But heavily influenced by Justin Bois’s tutorial[1], I understand it as “simulating data acquisition under an assumption to find the probability of an aspect of interest.”  So, next, I will present examples found in Justin Bois’s tutorial[1].</p>
+
+<h1 id="examples">Examples</h1>
+
+<h2 id="what-is-the-probability-of-getting-4-heads-when-a-coin-with-probability-05-of-heads-is-tossed-4-times">What is the probability of getting 4 heads when a coin with probability 0.5 of heads is tossed 4 times?</h2>
+<p>Following the spirit of hacker stats, we do a lot of 4-flip trial recording the number of heads each trial to get an answer, rather than rely on any formula. We can realize a lot of coin flipping using a random number generator and  for loop. The  below code generates 10000 repeats of the 4-flip trial, counting the number of heads. We get the number of  trials with  4 heads, and finally the probability of getting 4 heads in 4 tosses.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Code from [1]
+</span>
+<span class="n">n_all_heads</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Count number of 4-head trials
+</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span> <span class="c1"># 10000 repeats of the four flip trials
+</span>    <span class="n">heads</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
+    <span class="n">n_heads</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">heads</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_heads</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="c1"># If a given trial has four heads, increase the count
+</span>        <span class="n">n_all_heads</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+<span class="n">n_all_heads</span> <span class="o">/</span> <span class="mi">10000</span> <span class="c1"># What is the probability of getting all four heads?
+</span></code></pre></div></div>
+
+<h2 id="what-is-the-confidence-interval-of-a-sample">What is the confidence interval of a sample?</h2>
+<p>Suppose we have an observed data set of the rainfall amount in millimeters ([122.1,  69.8,  29.6, …,  65.8,  58.2, 130.4]). To get a confidence interval of the mean following hacker stats, you need to be able to simulate repeated measurements, and here comes  ‘bootstrapping’, sampling a dataset with replacement.</p>
+
+<p>The below code implements <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)">bootstrapping</a> using <code class="language-plaintext highlighter-rouge">np.random.choice()</code> in a for loop. It generates 10000 samples, and calculates the mean of each of them. That is, a sampling distribution of the mean is made, and a confidence interval is found by looking at 2.5 and 97.5th percentiles.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bs_replicates</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    
+    <span class="c1"># Generate a bootstrap sample
+</span>    <span class="n">bs_sample</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="n">rainfall</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rainfall</span><span class="p">))</span> <span class="c1"># Resampling engine
+</span>    <span class="n">bs_replicates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bs_sample</span><span class="p">)</span>
+    
+<span class="c1"># 95 percent confidence interval
+</span><span class="n">conf_int</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">bs_replicates</span><span class="p">,</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="is-the-amount-of-rainfall-in-november-and-june-different">Is the amount of rainfall in November and June different?</h2>
+<p>Suppose we have a dataset, a record of the amount of rainfall  during November and June. To see if these months have different amount of rainfall indeed, we set the following hypothesis to test:</p>
+
+\[H_0: \mu_{nov} = \mu_{jun}\newline
+H_1: \mu_{nov} \not = \mu_{jun}\]
+
+<p>To do the test with hacker stats, we need to generate many sets of data considering the null hypothesis is true. As a simulation method, there is permutation resampling: merge the two data sets, and iteratively divide the all values into two groups of the same sizes as the two data sets, in every possible way (every possible permutation)[2]. For each iteration, the difference of the two groups’ means is calculated, and we finally check where the observed difference locates in the distribution of these calculated differences.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">diff_observed</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rain_june</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rain_november</span><span class="p">)</span>
+
+<span class="n">perm_replicates</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span> <span class="c1"># 10000 iterations
+</span>    <span class="c1"># Generate a permutation sample
+</span>    <span class="n">perm_sample_1</span><span class="p">,</span> <span class="n">perm_sample_2</span> <span class="o">=</span> <span class="n">permutation_sample</span><span class="p">(</span><span class="n">rain_june</span><span class="p">,</span> <span class="n">rain_november</span><span class="p">)</span>
+
+    <span class="c1"># Compute the test statistic
+</span>    <span class="n">perm_replicates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">perm_sample_1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">perm_sample_2</span><span class="p">)</span>
+
+<span class="c1"># Plot the histogram
+</span><span class="n">plt</span><span class="p">.</span><span class="n">hist</span><span class="p">(</span><span class="n">perm_replicates</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Mean difference'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'PDF'</span><span class="p">)</span>
+
+<span class="c1"># Plot vertical lines at the absolute of the observed difference and negative to it
+</span><span class="n">plt</span><span class="p">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">diff_observed</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s">'r'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">diff_observed</span><span class="p">)</span><span class="o">*-</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">'r'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/rainfall_nov_jun.png" alt="Histogram of simulated differences -- confidence interval" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">empirical_diff_means</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rain_november</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rain_june</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">perm_replicates</span> <span class="o">&gt;=</span> <span class="n">empirical_diff_means</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">perm_replicates</span><span class="p">)</span>
+</code></pre></div></div>
+<p>For a p-value, we get the proportion of the distribution where the absolute difference was greater than the absolute value of the observed difference (as the example is the two-tailed test).</p>
+
+<p>We have looked around the examples that apply the hacker stats technique for different questions, and I believe that you got an idea on what hacker stats is.</p>
+
+<p>To the best of my knowledge, there are three methods that realize hacker stats [1][3][5]:</p>
+<ul>
+  <li>Use of an existing model</li>
+  <li>Permutation sampling</li>
+  <li>Bootstrapping</li>
+</ul>
+
+<p>Given them, I wondered about how different results of them would be, when applied to the sample problem. Adapting materials that were found in Bois’ tutorial[1] and Udacity[5], I performed two sample z-test of proportions using each of the three methods.</p>
+
+<h1 id="two-sample-z-test-of-proportions-eg-ab-testing-of-click-through-rate">Two sample z-test of proportions (e.g., A/B testing of click-through rate)</h1>
+<p>Suppose we have to determine whether the new banner design leads to a better click through rate (CTR) than the old one, and we have the below dataset that tells her group and whether she clicked or not, for each unique user (6328 rows × 2 columns).</p>
+
+<table style="border: 1; height: 280px;" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>group</th>
+      <th>clicked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5640</th>
+      <td>control</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>376</th>
+      <td>control</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4247</th>
+      <td>control</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2746</th>
+      <td>control</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>651</th>
+      <td>control</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5157</th>
+      <td>experiment</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4490</th>
+      <td>experiment</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>7745</th>
+      <td>experiment</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>942</th>
+      <td>experiment</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>5255</th>
+      <td>experiment</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A hypothesis has been made like this:</p>
+
+\[H_0: p_{exp} - p_{ctl} \leq 0\newline
+H_1: p_{exp} - p_{ctl} &gt; 0\]
+
+<h2 id="permutation-sampling">Permutation sampling</h2>
+<p>First, I present how to use permutation sampling, borrowing code from [1]. The below generates 10000 CTR differences between 10000 resampled pairs of the control and experiment groups.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ctl_df, a dataframe made by extracting control group records from 'both_df'
+# exp_df, experiment group records
+</span>
+<span class="n">ctl_ctr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">ctl_df</span><span class="p">[</span><span class="s">'clicked'</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctl_df</span><span class="p">)</span>
+<span class="n">exp_ctr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">exp_df</span><span class="p">[</span><span class="s">'clicked'</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">exp_df</span><span class="p">)</span>
+
+<span class="n">obs_diff</span> <span class="o">=</span> <span class="n">exp_ctr</span> <span class="o">-</span> <span class="n">ctl_ctr</span>
+
+<span class="n">ctl</span> <span class="o">=</span> <span class="n">ctl_df</span><span class="p">[</span><span class="s">'clicked'</span><span class="p">].</span><span class="n">values</span> 
+<span class="n">exp</span> <span class="o">=</span> <span class="n">exp_df</span><span class="p">[</span><span class="s">'clicked'</span><span class="p">].</span><span class="n">values</span>
+
+<span class="n">diffs_pm</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+
+    <span class="c1"># Concatenate the data sets: data
+</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ctl</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
+
+    <span class="c1"># Permute the concatenated array: permuted_data
+</span>    <span class="n">permuted_data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># Split the permuted array into two: perm_sample_1, perm_sample_2
+</span>    <span class="n">ctl_perm_sample</span> <span class="o">=</span> <span class="n">permuted_data</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">ctl</span><span class="p">)]</span>
+    <span class="n">exp_perm_sample</span> <span class="o">=</span> <span class="n">permuted_data</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">exp</span><span class="p">):]</span>
+    
+    <span class="n">diff_sample</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">exp_perm_sample</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">exp_perm_sample</span><span class="p">)</span> <span class="o">-</span> \
+                <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">ctl_perm_sample</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctl_perm_sample</span><span class="p">)</span>
+    
+    <span class="c1"># Compute the test statistic
+</span>    <span class="n">diffs_pm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff_sample</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">diffs_pm</span> <span class="o">&gt;</span> <span class="n">obs_diff</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">diffs_pm</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'p-value ='</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0026):</p>
+
+<p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_permutation_histogram.png" alt="Histogram of simulated differences -- ab test with permutation" /></p>
+
+<p>We can get a p-value by dividing the number of differences larger than the observed difference by the total number of values.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">diffs_pm</span> <span class="o">&gt;</span> <span class="n">obs_diff</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">diffs_pm</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'p-value ='</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="bootstrapping">Bootstrapping</h2>
+<p>Second, I test the hypothesis by generating samples using the bootstrap method.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 1) Compute the observed difference
+</span><span class="n">obs_diff</span> <span class="o">=</span> <span class="n">exp_ctr</span> <span class="o">-</span> <span class="n">ctl_ctr</span>
+
+<span class="c1"># 2) Simulate the sampling distribution for the difference in proportions
+</span><span class="n">diffs_bt</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="c1"># Pick from the whole data with replacement
+</span>    <span class="n">b_samp</span> <span class="o">=</span> <span class="n">both_df</span><span class="p">.</span><span class="n">sample</span><span class="p">(</span><span class="n">both_df</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">replace</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    
+    <span class="n">ctl_samp</span> <span class="o">=</span> <span class="n">b_samp</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="s">'group == "control"'</span><span class="p">)</span>
+    <span class="n">exp_samp</span> <span class="o">=</span> <span class="n">b_samp</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="s">'group == "experiment"'</span><span class="p">)</span>
+    
+    <span class="n">ctl_samp_ctr</span> <span class="o">=</span> <span class="n">ctl_samp</span><span class="p">[</span><span class="s">'clicked'</span><span class="p">].</span><span class="nb">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctl_samp</span><span class="p">)</span>
+    <span class="n">exp_samp_ctr</span> <span class="o">=</span> <span class="n">exp_samp</span><span class="p">[</span><span class="s">'clicked'</span><span class="p">].</span><span class="nb">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">exp_samp</span><span class="p">)</span>
+ 
+    <span class="n">diffs_bt</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_samp_ctr</span> <span class="o">-</span> <span class="n">ctl_samp_ctr</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Next, using the above sampling, a distribution under the null hypothesis is simulated, by creating a random normal distribution centered at 0, with the same spread and size.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">diffs_arr</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">diffs_bt</span><span class="p">)</span>
+<span class="n">null_vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">diffs_arr</span><span class="p">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">diffs_arr</span><span class="p">.</span><span class="n">size</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">hist</span><span class="p">(</span><span class="n">null_vals</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">obs_diff</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>To get a p-value:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">null_vals</span> <span class="o">&gt;</span> <span class="n">obs_diff</span><span class="p">).</span><span class="n">mean</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>This is a histogram of the simulated CTR rate differences (p value is 0.0032):</p>
+
+<p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_bootstrap_histogram.png" alt="Histogram of simulated differences -- ab test with bootstrap" /></p>
+
+<h2 id="use-of-binomial-distribution">Use of binomial distribution</h2>
+<p>As shown below, sample acquistion from a binonimal distribution can be simulated using <code class="language-plaintext highlighter-rouge">np.random.choice()</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculate a click-through-rate under the null hypothesis
+</span><span class="n">p_null</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">both_df</span><span class="p">[</span><span class="s">'clicked'</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">both_df</span><span class="p">)</span>
+
+<span class="n">diffs_bd_1</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">new_page_converted</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n_exp</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_null</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p_null</span><span class="p">))</span>
+    <span class="n">old_page_converted</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n_ctl</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_null</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p_null</span><span class="p">))</span>
+
+    <span class="n">diffs_bd_1</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_page_converted</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">old_page_converted</span><span class="p">.</span><span class="n">mean</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>This is a histogram of the results (p value is 0.0051):</p>
+
+<p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_choice_histogram.png" alt="Histogram of simulated differences -- ab test with binomial distribution np.random.choice" /></p>
+
+<p>Or, <code class="language-plaintext highlighter-rouge">np.random.binomial()</code> can be used as below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">new_simulation</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">binomial</span><span class="p">(</span><span class="n">n_exp</span><span class="p">,</span> <span class="n">p_null</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span><span class="o">/</span><span class="n">n_exp</span>
+<span class="n">old_simulation</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">binomial</span><span class="p">(</span><span class="n">n_ctl</span><span class="p">,</span> <span class="n">p_null</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span><span class="o">/</span><span class="n">n_ctl</span>
+<span class="n">diffs_bd_2</span> <span class="o">=</span> <span class="n">new_simulation</span> <span class="o">-</span> <span class="n">old_simulation</span>
+</code></pre></div></div>
+
+<p>This is a histogram of the results (p value is 0.004):</p>
+
+<p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_binomial_histogram.png" alt="Histogram of simulated differences -- ab test with binomial distribution np.random.binomial" /></p>
+
+<p><br /></p>
+
+<p>In addition to use of hacker stats, I calculated a p-value using the parametric method (statsmodels.stats.proportion.proportions_ztest()).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statsmodels.stats.proportion</span> <span class="kn">import</span> <span class="n">proportions_ztest</span><span class="p">,</span> <span class="n">proportion_confint</span>
+
+<span class="n">successes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">928</span><span class="p">,</span> <span class="mi">932</span><span class="p">]</span>
+<span class="n">nobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_exp</span><span class="p">,</span> <span class="n">n_ctl</span><span class="p">]</span>
+
+<span class="n">z_stat</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">proportions_ztest</span><span class="p">(</span><span class="n">successes</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="n">nobs</span><span class="p">,</span> <span class="n">alternative</span> <span class="o">=</span> <span class="s">'larger'</span><span class="p">)</span>
+<span class="p">(</span><span class="n">lower_con</span><span class="p">,</span> <span class="n">lower_treat</span><span class="p">),</span> <span class="p">(</span><span class="n">upper_con</span><span class="p">,</span> <span class="n">upper_treat</span><span class="p">)</span> <span class="o">=</span> <span class="n">proportion_confint</span><span class="p">(</span><span class="n">successes</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="n">nobs</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'z statistic: </span><span class="si">{</span><span class="n">z_stat</span><span class="p">:.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'p-value: </span><span class="si">{</span><span class="n">pval</span><span class="p">:.</span><span class="mi">5</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="notebook_output">
+<pre>
+z statistic: 2.62
+p-value: 0.00442
+</pre>
+</div>
+
+<p><br /></p>
+
+<p>Let’s compare all the p-values:</p>
+<ul>
+  <li>Permutation method: 0.0026</li>
+  <li>Bootstrapping: 0.0032</li>
+  <li>Use of binomial distribution with np.random.choice(): 0.0051</li>
+  <li>Use of binomial distribution with np.random.binomial(): 0.004</li>
+</ul>
+
+<p>And, with the parametric method, 0.00442</p>
+
+<p>Since we generated samples using random number generators, the results with the hackter stats methods are not fixed ones. I ran the code a few times, and compared them as below:</p>
+<pre style="font-size:0.8em; padding-left:2em; padding-right:2em;">
+perm 0.0026 &lt; boot 0.0032 &lt; bi 0.004 &lt; para 0.00442 &lt; choice 0.0051
+perm 0.0015 &lt; boot 0.0038 &lt; bi 0.0038 &lt; para 0.00442 &lt; choice 0.0047
+perm 0.0026 &lt; choice 0.0032 &lt; bi 0.004 &lt; boot 0.0041 &lt; para 0.00442
+perm 0.0024 &lt; boot 0.004 &lt; para 0.00442 &lt; choice 0.0046 &lt; bi 0.0047
+</pre>
+<p>Given the results, the below questions came to my mind:</p>
+<ol>
+  <li>The p values are somewhat different each other. Which should we pick as a final result? Which one is the most trustable?</li>
+  <li>It seems that the permutation sampling results in a smaller p-value than the bootstrapping and the other methods. Will it be always true no matter what data are tested?</li>
+</ol>
+
+<h1 id="references">References</h1>
+<ol>
+  <li>Justin Bois. Datacamp. <a href="https://www.datacamp.com/courses/statistical-thinking-in-python-part-1">Statistical thinking (1)</a> and <a href="https://www.datacamp.com/courses/statistical-thinking-in-python-part-2">Statistical thinking (2)</a></li>
+  <li>Wikipedia. <a href="https://en.wikipedia.org/wiki/Permutation_test">Permutation test</a></li>
+  <li>Yevgeniy (Gene) Mishchenko. <a href="https://medium.com/towards-data-science/bootstrapping-vs-permutation-testing-a30237795970">Bootstrapping vs. Permutation Testing</a></li>
+  <li>Matthew E. Parker. <a href="https://medium.com/@mattheweparker/common-machine-learning-resampling-methods-like-bootstrapping-and-permutation-testing-attempt-to-ddc4fbbda391">Resampling (Bootstrapping &amp; Permutation Testing)</a></li>
+  <li>Udacity, <a href="https://www.udacity.com/course/data-analyst-nanodegree--nd002">Data Analyst Nanodegree</a></li>
+  <li>Jake Vanderplas. <a href="https://www.youtube.com/watch?v=Iq9DzN6mvYA">Statistics for Hackers - PyCon 2016</a></li>
+</ol>
+</section>
+  
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+
+    </div>
+    
+<script src="/blog-site/assets/js/katex_init.js"></script>
+
+
+
+<footer class="site-footer">
+	<p class="text">© 2022 ・ Jisoo Lee
+</p>
+</footer>
+
+
+  </body>
+</html>
