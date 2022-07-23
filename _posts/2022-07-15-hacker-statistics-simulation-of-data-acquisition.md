@@ -9,7 +9,7 @@ What is hacker statistics? My online search did not bring much information on it
 # Examples
 
 ## What is the probability of getting 4 heads when a coin with probability 0.5 of heads is tossed 4 times?
-Following the spirit of hacker stats, we do a lot of 4-flip trial recording the number of heads each trial to get an answer, rather than rely on any formula. We can realize a lot of coin flipping using a random number generator and  for loop. The  below code generates 10000 repeats of the 4-flip trial, counting the number of heads. We get the number of  trials with  4 heads, and finally the probability of getting 4 heads in 4 tosses. 
+To get an answer to it following the spirit of hacker stats, we do a lot of 4-flip trial recording the number of heads each trial to get an answer, rather than rely on any formula. But, instead of manually doing it, we can realize a lot of coin flipping using a random number generator and for loop. The below code generates 10000 repeats of the 4-flip trial, counting the number of heads. We get the number of  trials with  4 heads, and finally the probability of getting 4 heads in 4 tosses. 
 
 ```python
 # Code from [1]
@@ -26,7 +26,7 @@ n_all_heads / 10000 # What is the probability of getting all four heads?
 ```
 
 ## What is the confidence interval of a sample?
-Suppose we have an observed data set of the rainfall amount in millimeters ([122.1,  69.8,  29.6, ...,  65.8,  58.2, 130.4]). To get a confidence interval of the mean following hacker stats, you need to be able to simulate repeated measurements, and here comes  'bootstrapping', sampling a dataset with replacement.
+Suppose we have an observed data set of the rainfall amount in millimeters ([122.1,  69.8,  29.6, ...,  65.8,  58.2, 130.4]). To get a confidence interval of the mean using hacker stats, we need to be able to simulate repeated measurements, and here comes  'bootstrapping', sampling a dataset with replacement.
 
 The below code implements [bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)) using ```np.random.choice()``` in a for loop. It generates 10000 samples, and calculates the mean of each of them. That is, a sampling distribution of the mean is made, and a confidence interval is found by looking at 2.5 and 97.5th percentiles. 
 
@@ -44,14 +44,14 @@ conf_int = np.percentile(bs_replicates, [2.5, 97.5])
 ```
 
 ## Is the amount of rainfall in November and June different?
-Suppose we have a dataset, a record of the amount of rainfall  during November and June. To see if these months have different amount of rainfall indeed, we set the following hypothesis to test:
+Suppose we have a dataset, a record of the amount of rainfall during November and June. To see if these months have different amount of rainfall indeed, we set the following hypothesis to test:
 
 $$
 H_0: \mu_{nov} = \mu_{jun}\newline
 H_1: \mu_{nov} \not = \mu_{jun}
 $$
 
-To do the test with hacker stats, we need to generate many sets of data considering the null hypothesis is true. As a simulation method, there is permutation resampling: merge the two data sets, and iteratively divide the all values into two groups of the same sizes as the two data sets, in every possible way (every possible permutation)[2]. For each iteration, the difference of the two groups' means is calculated, and we finally check where the observed difference locates in the distribution of these calculated differences. 
+To do the test with hacker stats, we need to generate many sets of data considering the null hypothesis is true. As a simulation method, there is permutation resampling: merge the two data sets, and iteratively divide the all values into two groups of the same sizes as the two data sets, in every possible way (every possible permutation)[2]. For each iteration, the difference of the two groups' means is calculated, and we finally check where the observed difference locates in the distribution of these simulated differences. 
 
 ```python
 diff_observed = np.mean(rain_june) - np.mean(rain_november)
@@ -170,7 +170,7 @@ H_1: p_{exp} - p_{ctl} > 0
 $$
 
 ## Permutation sampling
-First, I present how to use permutation sampling, borrowing code from [1]. The below generates 10000 CTR differences between 10000 resampled pairs of the control and experiment groups. 
+First, I present use of permutation sampling, borrowing code from [1]. The below generates 10000 CTR differences between 10000 resampled pairs of the control and experiment groups. 
 
 ```python
 # ctl_df, a dataframe made by extracting control group records from 'both_df'
@@ -208,7 +208,7 @@ p = np.sum(diffs_pm > obs_diff) / len(diffs_pm)
 print('p-value =', p)
 ```
 
-This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0027):  
+This is the histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0027):  
 
 ![Histogram of simulated differences -- ab test with permutation]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_permutation_histogram.png)
 
@@ -255,7 +255,7 @@ To get a p-value:
 (null_vals > obs_diff).mean()
 ```
 
-This is a histogram of the simulated CTR rate differences (p value is 0.0039): 
+This is the histogram of the simulated CTR rate differences (p value is 0.0039): 
 
 ![Histogram of simulated differences -- ab test with bootstrap]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_bootstrap_histogram.png)
 
@@ -275,7 +275,7 @@ for _ in range(10000):
     diffs_bd_1.append(new_page_converted.mean() - old_page_converted.mean())
 ```
 
-This is a histogram of the results (p value is 0.0049): 
+This is the histogram of the results (p value is 0.0049): 
 
 ![Histogram of simulated differences -- ab test with binomial distribution np.random.choice]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_choice_histogram.png)
 
@@ -288,7 +288,7 @@ old_simulation = np.random.binomial(n_ctl, p_null, 10000)/n_ctl
 diffs_bd_2 = new_simulation - old_simulation
 ```
 
-This is a histogram of the results (p value is 0.0045): 
+This is the histogram of the results (p value is 0.0045): 
 
 ![Histogram of simulated differences -- ab test with binomial distribution np.random.binomial]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_binomial_histogram.png)
 
