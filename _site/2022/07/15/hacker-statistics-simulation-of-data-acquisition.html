@@ -409,7 +409,7 @@ H_1: p_{exp} - p_{ctl} &gt; 0\]
 <span class="k">print</span><span class="p">(</span><span class="s">'p-value ='</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0026):</p>
+<p>This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0027):</p>
 
 <p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_permutation_histogram.png" alt="Histogram of simulated differences -- ab test with permutation" /></p>
 
@@ -452,7 +452,7 @@ H_1: p_{exp} - p_{ctl} &gt; 0\]
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">null_vals</span> <span class="o">&gt;</span> <span class="n">obs_diff</span><span class="p">).</span><span class="n">mean</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>This is a histogram of the simulated CTR rate differences (p value is 0.0032):</p>
+<p>This is a histogram of the simulated CTR rate differences (p value is 0.0039):</p>
 
 <p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_bootstrap_histogram.png" alt="Histogram of simulated differences -- ab test with bootstrap" /></p>
 
@@ -471,7 +471,7 @@ H_1: p_{exp} - p_{ctl} &gt; 0\]
     <span class="n">diffs_bd_1</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_page_converted</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">old_page_converted</span><span class="p">.</span><span class="n">mean</span><span class="p">())</span>
 </code></pre></div></div>
 
-<p>This is a histogram of the results (p value is 0.0051):</p>
+<p>This is a histogram of the results (p value is 0.0049):</p>
 
 <p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_choice_histogram.png" alt="Histogram of simulated differences -- ab test with binomial distribution np.random.choice" /></p>
 
@@ -482,13 +482,13 @@ H_1: p_{exp} - p_{ctl} &gt; 0\]
 <span class="n">diffs_bd_2</span> <span class="o">=</span> <span class="n">new_simulation</span> <span class="o">-</span> <span class="n">old_simulation</span>
 </code></pre></div></div>
 
-<p>This is a histogram of the results (p value is 0.004):</p>
+<p>This is a histogram of the results (p value is 0.0045):</p>
 
 <p><img src="/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_binomial_histogram.png" alt="Histogram of simulated differences -- ab test with binomial distribution np.random.binomial" /></p>
 
 <p><br /></p>
 
-<p>In addition to use of hacker stats, I calculated a p-value using the parametric method (statsmodels.stats.proportion.proportions_ztest()).</p>
+<p>In addition to the use of hacker stats, I calculated a p-value using the parametric method (statsmodels.stats.proportion.proportions_ztest()).</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statsmodels.stats.proportion</span> <span class="kn">import</span> <span class="n">proportions_ztest</span><span class="p">,</span> <span class="n">proportion_confint</span>
 
@@ -508,29 +508,32 @@ p-value: 0.00442
 </pre>
 </div>
 
+<p><em>You can find all the code in my <a href="https://github.com/jisooleeworks/blog-code/blob/main/hacker_stats_AB_testing-upload.ipynb">Github page</a>.</em></p>
+
 <p><br /></p>
 
 <p>Let’s compare all the p-values:</p>
 <ul>
-  <li>Permutation method: 0.0026</li>
-  <li>Bootstrapping: 0.0032</li>
-  <li>Use of binomial distribution with np.random.choice(): 0.0051</li>
-  <li>Use of binomial distribution with np.random.binomial(): 0.004</li>
+  <li>Permutation method: 0.0027</li>
+  <li>Bootstrapping: 0.0039</li>
+  <li>Use of binomial distribution with np.random.choice(): 0.0045</li>
+  <li>Use of binomial distribution with np.random.binomial(): 0.0049</li>
 </ul>
 
 <p>And, with the parametric method, 0.00442</p>
 
 <p>Since we generated samples using random number generators, the results with the hackter stats methods are not fixed ones. I ran the code a few times, and compared them as below:</p>
 <pre style="font-size:0.8em; padding-left:2em; padding-right:2em;">
-perm 0.0026 &lt; boot 0.0032 &lt; bi 0.004 &lt; para 0.00442 &lt; choice 0.0051
-perm 0.0015 &lt; boot 0.0038 &lt; bi 0.0038 &lt; para 0.00442 &lt; choice 0.0047
-perm 0.0026 &lt; choice 0.0032 &lt; bi 0.004 &lt; boot 0.0041 &lt; para 0.00442
-perm 0.0024 &lt; boot 0.004 &lt; para 0.00442 &lt; choice 0.0046 &lt; bi 0.0047
+perm 0.0027 &lt; boot 0.0039 &lt; para 0.00442 &lt; bi 0.0045 &lt; choice 0.0049
+choice 0.0026 &lt; perm 0.003 &lt; boot 0.0039 &lt; para 0.00442 &lt; bi 0.0054
+perm 0.0013 &lt; choice 0.0033 &lt; boot 0.0037 &lt; bi 0.0039 &lt; para 0.00442
+perm 0.0025  &lt; para 0.00442 &lt; choice 0.0046 &lt; boot 0.0051 &lt; bi 0.0053
 </pre>
+
 <p>Given the results, the below questions came to my mind:</p>
 <ol>
   <li>The p values are somewhat different each other. Which should we pick as a final result? Which one is the most trustable?</li>
-  <li>It seems that the permutation sampling results in a smaller p-value than the bootstrapping and the other methods. Will it be always true no matter what data are tested?</li>
+  <li>In my observation, the permutation sampling results in a smaller p-value than the bootstrapping. Will it be always true no matter what data are tested?</li>
 </ol>
 
 <h1 id="references">References</h1>

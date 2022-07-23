@@ -208,7 +208,7 @@ p = np.sum(diffs_pm > obs_diff) / len(diffs_pm)
 print('p-value =', p)
 ```
 
-This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0026):  
+This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0027):  
 
 ![Histogram of simulated differences -- ab test with permutation]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_permutation_histogram.png)
 
@@ -255,7 +255,7 @@ To get a p-value:
 (null_vals > obs_diff).mean()
 ```
 
-This is a histogram of the simulated CTR rate differences (p value is 0.0032): 
+This is a histogram of the simulated CTR rate differences (p value is 0.0039): 
 
 ![Histogram of simulated differences -- ab test with bootstrap]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_bootstrap_histogram.png)
 
@@ -275,7 +275,7 @@ for _ in range(10000):
     diffs_bd_1.append(new_page_converted.mean() - old_page_converted.mean())
 ```
 
-This is a histogram of the results (p value is 0.0051): 
+This is a histogram of the results (p value is 0.0049): 
 
 ![Histogram of simulated differences -- ab test with binomial distribution np.random.choice]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_choice_histogram.png)
 
@@ -288,13 +288,13 @@ old_simulation = np.random.binomial(n_ctl, p_null, 10000)/n_ctl
 diffs_bd_2 = new_simulation - old_simulation
 ```
 
-This is a histogram of the results (p value is 0.004): 
+This is a histogram of the results (p value is 0.0045): 
 
 ![Histogram of simulated differences -- ab test with binomial distribution np.random.binomial]({{ site.baseurl }}/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_binomial_histogram.png)
 
 <br />
 
-In addition to use of hacker stats, I calculated a p-value using the parametric method (statsmodels.stats.proportion.proportions_ztest()). 
+In addition to the use of hacker stats, I calculated a p-value using the parametric method (statsmodels.stats.proportion.proportions_ztest()). 
 
 ```python
 from statsmodels.stats.proportion import proportions_ztest, proportion_confint
@@ -315,27 +315,29 @@ p-value: 0.00442
 </pre>
 </div>
 
+*You can find all the code in my [Github page](https://github.com/jisooleeworks/blog-code/blob/main/hacker_stats_AB_testing-upload.ipynb).*
+
 <br />
 
 Let's compare all the p-values:
-* Permutation method: 0.0026
-* Bootstrapping: 0.0032
-* Use of binomial distribution with np.random.choice(): 0.0051
-* Use of binomial distribution with np.random.binomial(): 0.004
+* Permutation method: 0.0027
+* Bootstrapping: 0.0039
+* Use of binomial distribution with np.random.choice(): 0.0045
+* Use of binomial distribution with np.random.binomial(): 0.0049
 
 And, with the parametric method, 0.00442
 
 Since we generated samples using random number generators, the results with the hackter stats methods are not fixed ones. I ran the code a few times, and compared them as below:
 <pre style="font-size:0.8em; padding-left:2em; padding-right:2em;">
-perm 0.0026 < boot 0.0032 < bi 0.004 < para 0.00442 < choice 0.0051
-perm 0.0015 < boot 0.0038 < bi 0.0038 < para 0.00442 < choice 0.0047
-perm 0.0026 < choice 0.0032 < bi 0.004 < boot 0.0041 < para 0.00442
-perm 0.0024 < boot 0.004 < para 0.00442 < choice 0.0046 < bi 0.0047
+perm 0.0027 < boot 0.0039 < para 0.00442 < bi 0.0045 < choice 0.0049
+choice 0.0026 < perm 0.003 < boot 0.0039 < para 0.00442 < bi 0.0054
+perm 0.0013 < choice 0.0033 < boot 0.0037 < bi 0.0039 < para 0.00442
+perm 0.0025  < para 0.00442 < choice 0.0046 < boot 0.0051 < bi 0.0053
 </pre>
+
 Given the results, the below questions came to my mind:
 1. The p values are somewhat different each other. Which should we pick as a final result? Which one is the most trustable?
-2. It seems that the permutation sampling results in a smaller p-value than the bootstrapping and the other methods. Will it be always true no matter what data are tested?
-
+2. In my observation, the permutation sampling results in a smaller p-value than the bootstrapping. Will it be always true no matter what data are tested?
 
 # References
 1. Justin Bois. Datacamp. [Statistical thinking (1)](https://www.datacamp.com/courses/statistical-thinking-in-python-part-1) and [Statistical thinking (2)](https://www.datacamp.com/courses/statistical-thinking-in-python-part-2)

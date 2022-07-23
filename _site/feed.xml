@@ -5,7 +5,7 @@
     <atom:link href="/blog-site/feed.xml" rel="self" type="application/rss+xml"/>
     <link>http://localhost:4000/blog-site/</link>
     <description>Data analytics blog</description>
-    <pubDate>Fri, 22 Jul 2022 16:08:56 -0700</pubDate>
+    <pubDate>Fri, 22 Jul 2022 17:00:50 -0700</pubDate>
     
       <item>
         <title>Hacker Statistics, simulation of data acquisition</title>
@@ -210,7 +210,7 @@ H_1: p_{exp} - p_{ctl} &amp;gt; 0\]
 &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;p-value =&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0026):&lt;/p&gt;
+&lt;p&gt;This is a histogram of the CTR differences (test statistics acquired with the resampling), with a line indicating the observed difference (p-value is 0.0027):&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_permutation_histogram.png&quot; alt=&quot;Histogram of simulated differences -- ab test with permutation&quot; /&gt;&lt;/p&gt;
 
@@ -253,7 +253,7 @@ H_1: p_{exp} - p_{ctl} &amp;gt; 0\]
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;null_vals&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obs_diff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This is a histogram of the simulated CTR rate differences (p value is 0.0032):&lt;/p&gt;
+&lt;p&gt;This is a histogram of the simulated CTR rate differences (p value is 0.0039):&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_bootstrap_histogram.png&quot; alt=&quot;Histogram of simulated differences -- ab test with bootstrap&quot; /&gt;&lt;/p&gt;
 
@@ -272,7 +272,7 @@ H_1: p_{exp} - p_{ctl} &amp;gt; 0\]
     &lt;span class=&quot;n&quot;&gt;diffs_bd_1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new_page_converted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;old_page_converted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This is a histogram of the results (p value is 0.0051):&lt;/p&gt;
+&lt;p&gt;This is a histogram of the results (p value is 0.0049):&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_choice_histogram.png&quot; alt=&quot;Histogram of simulated differences -- ab test with binomial distribution np.random.choice&quot; /&gt;&lt;/p&gt;
 
@@ -283,13 +283,13 @@ H_1: p_{exp} - p_{ctl} &amp;gt; 0\]
 &lt;span class=&quot;n&quot;&gt;diffs_bd_2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new_simulation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;old_simulation&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This is a histogram of the results (p value is 0.004):&lt;/p&gt;
+&lt;p&gt;This is a histogram of the results (p value is 0.0045):&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/blog-site/assets/img/2022-07-15-hacker-statistics-simulation-of-data-acquisition/ab_test_binomial_binomial_histogram.png&quot; alt=&quot;Histogram of simulated differences -- ab test with binomial distribution np.random.binomial&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;In addition to use of hacker stats, I calculated a p-value using the parametric method (statsmodels.stats.proportion.proportions_ztest()).&lt;/p&gt;
+&lt;p&gt;In addition to the use of hacker stats, I calculated a p-value using the parametric method (statsmodels.stats.proportion.proportions_ztest()).&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;statsmodels.stats.proportion&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;proportions_ztest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;proportion_confint&lt;/span&gt;
 
@@ -309,29 +309,32 @@ p-value: 0.00442
 &lt;/pre&gt;
 &lt;/div&gt;
 
+&lt;p&gt;&lt;em&gt;You can find all the code in my &lt;a href=&quot;https://github.com/jisooleeworks/blog-code/blob/main/hacker_stats_AB_testing-upload.ipynb&quot;&gt;Github page&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;Let’s compare all the p-values:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;Permutation method: 0.0026&lt;/li&gt;
-  &lt;li&gt;Bootstrapping: 0.0032&lt;/li&gt;
-  &lt;li&gt;Use of binomial distribution with np.random.choice(): 0.0051&lt;/li&gt;
-  &lt;li&gt;Use of binomial distribution with np.random.binomial(): 0.004&lt;/li&gt;
+  &lt;li&gt;Permutation method: 0.0027&lt;/li&gt;
+  &lt;li&gt;Bootstrapping: 0.0039&lt;/li&gt;
+  &lt;li&gt;Use of binomial distribution with np.random.choice(): 0.0045&lt;/li&gt;
+  &lt;li&gt;Use of binomial distribution with np.random.binomial(): 0.0049&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;And, with the parametric method, 0.00442&lt;/p&gt;
 
 &lt;p&gt;Since we generated samples using random number generators, the results with the hackter stats methods are not fixed ones. I ran the code a few times, and compared them as below:&lt;/p&gt;
 &lt;pre style=&quot;font-size:0.8em; padding-left:2em; padding-right:2em;&quot;&gt;
-perm 0.0026 &amp;lt; boot 0.0032 &amp;lt; bi 0.004 &amp;lt; para 0.00442 &amp;lt; choice 0.0051
-perm 0.0015 &amp;lt; boot 0.0038 &amp;lt; bi 0.0038 &amp;lt; para 0.00442 &amp;lt; choice 0.0047
-perm 0.0026 &amp;lt; choice 0.0032 &amp;lt; bi 0.004 &amp;lt; boot 0.0041 &amp;lt; para 0.00442
-perm 0.0024 &amp;lt; boot 0.004 &amp;lt; para 0.00442 &amp;lt; choice 0.0046 &amp;lt; bi 0.0047
+perm 0.0027 &amp;lt; boot 0.0039 &amp;lt; para 0.00442 &amp;lt; bi 0.0045 &amp;lt; choice 0.0049
+choice 0.0026 &amp;lt; perm 0.003 &amp;lt; boot 0.0039 &amp;lt; para 0.00442 &amp;lt; bi 0.0054
+perm 0.0013 &amp;lt; choice 0.0033 &amp;lt; boot 0.0037 &amp;lt; bi 0.0039 &amp;lt; para 0.00442
+perm 0.0025  &amp;lt; para 0.00442 &amp;lt; choice 0.0046 &amp;lt; boot 0.0051 &amp;lt; bi 0.0053
 &lt;/pre&gt;
+
 &lt;p&gt;Given the results, the below questions came to my mind:&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;The p values are somewhat different each other. Which should we pick as a final result? Which one is the most trustable?&lt;/li&gt;
-  &lt;li&gt;It seems that the permutation sampling results in a smaller p-value than the bootstrapping and the other methods. Will it be always true no matter what data are tested?&lt;/li&gt;
+  &lt;li&gt;In my observation, the permutation sampling results in a smaller p-value than the bootstrapping. Will it be always true no matter what data are tested?&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
