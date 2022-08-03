@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+	<meta charset="utf-8">
+	<title>Sample size formulas | Jisoo Lee</title>
+	<meta name="description"
+		content="Although online tools are available to obtain a sample size,  I make a note of formulas for sample size calculation. Being aware of them may help you use onl...">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="/blog-site/assets/css/main.css">
+
+	<!--Favicon-->
+	<link rel="shortcut icon" href="/blog-site/assets/favicon.ico" type="image/x-icon">
+
+	<!-- Canonical -->
+	<link rel="canonical" href="/blog-site/2022/07/25/sample-size-formulas.html">
+
+	<!-- RSS -->
+	<link rel="alternate" type="application/atom+xml" title="Jisoo Lee"
+		href="/blog-site/feed.xml" />
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+	<!-- Google Fonts -->
+	
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic" rel="stylesheet"
+		type="text/css">
+	
+
+	<!-- KaTeX -->
+	
+	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css"
+		integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+
+	<script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"
+		integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ"
+		crossorigin="anonymous"></script> -->
+
+	 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"> -->
+	 
+	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+	 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+	 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
+	 <script>
+		 document.addEventListener("DOMContentLoaded", function() {
+			 renderMathInElement(document.body, {
+				 // ...options...
+			 });
+		 });
+	 </script>
+	
+
+	<!-- Google Analytics -->
+	
+
+<!-- Begin section for dataframe table formatting -->
+<style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+		overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 0.7em;
+        line-height: 1.2;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 0.3em;
+    }
+    table.dataframe td {
+      padding: 0.3em;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+
+
+	table.dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    table.dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    table.dataframe thead th {
+        text-align: left;
+    }
+
+	.notebook_output pre {
+		font-size: 0.8em;
+		border: 1;
+		line-height: 1.2;
+	}
+
+	.highlighter-rouge pre{
+		margin-bottom: 1.5em;
+		padding: 1.2em;
+	}
+
+</style>
+<!-- End section for dataframe table formatting -->
+
+</head>
+  <body>
+    <header class="site-header">
+	<div class="branding">
+		
+		<h1 class="site-title">
+			<a href="/blog-site/">Jisoo Lee</a>
+		</h1>
+	</div>
+	<nav class="site-nav">
+		<ul>
+			
+			
+			
+			
+			
+			<li>
+				<a class="page-link" href="/blog-site/about/">
+					About
+				</a>
+			</li>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- Social icons from Font Awesome, if enabled  -->
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/jisooleeworks" title="Follow on GitHub">
+		<i class="fab fa-fw fa-github"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Search bar -->
+            
+		</ul>
+	</nav>
+
+</header>
+
+    <div class="content">
+      <article >
+  <header style="background-image: url('/blog-site/')">
+    <h1 class="title">Sample size formulas</h1>
+    
+    <p class="meta">
+      July 25, 2022
+      
+    </p>
+  </header>
+  <section class="post-content"><p>Although online tools are available to obtain a sample size,  I make a note of formulas for sample size calculation. Being aware of them may help you use online calculators more confidently. It seems that formulas come in different flavors. However, there are more commonly used ones. I will list them up, after check the fundamentals of sample size determination.</p>
+
+<h1 id="factors-to-consider-in-sample-size-determination">Factors to consider in sample size determination</h1>
+
+<p>Before formulas, let’s look through what affect the sample size:</p>
+<ol>
+  <li>It depends on the <strong>size of difference</strong> that you would like to detect. If differences are smaller, a larger sample size is required. That is, you may not be able to detect a small difference (e.g., cannot reject the null hypothesis), if a sample size is not large enough for it. In other words, larger differences can be caught with smaller sample sizes.</li>
+  <li>It depends on the <strong>standard deviation</strong>. The smaller the standard deviation is, the smaller the sample size it.</li>
+  <li>It depends on the <strong>size of Type 1 error</strong>. If you are strict on it and thus set it smaller, you need a larger sample size.</li>
+  <li>It depends on the <strong>size of Type 2 error</strong>. If you set it smaller, a larger sample size is required. In other words,  you are likely to fail to reject the null hypothesis, if your sample size is not large enough for your Type 2 error level.</li>
+</ol>
+
+<p>In practices, the third and forth factor seems easy to determine. I may follow kind of conventions: e.g., 0.05 or 0.01 for Type 1 error, and 0.1 or 0.2 for Type 2 error. But, the difference and standard deviation are tricky. With regard to the difference, we need to think of what meaningful difference is for a given situation. For instance, “is it worthwhile conducting a study to see if there is 0.1% increase in conversion rate?” With regard to estimation of the standard deviation, it is suggested to refer to existing work, or conduct pilot test, if feasible, and with caution [1][2].</p>
+
+<h1 id="for-the-mean">For the mean</h1>
+
+<p>Formulas for sample size calculation have different detail according to study designs. We will first look at formulas for the mean to give you a sense of how they are formed fundamentally.</p>
+
+<h2 id="finding-a-confidence-interval">Finding a confidence interval</h2>
+<p>Suppose you target a margin of error that is calculated as follow:</p>
+
+\[E = Z_{1-\alpha/2}\frac{\sigma}{\sqrt{n}}\]
+
+<p>By solving this for n using algebra, you get the below formula that results in the sample size needed for the target margin of error:</p>
+
+\[n = \frac{Z_{1-\alpha/2}^2\sigma^2}{E^2}\]
+
+<h2 id="hypothesis-testing">Hypothesis testing</h2>
+<p>We consider not only Type 1 error, but also Type 2 error. In general, the formula for power computation involving the both is as follow (for the two-tailed test) [3]:</p>
+
+\[Z_{power} = \frac{\delta}{SE} - Z_{1-\alpha/2}\]
+
+<h3 id="one-sample-test">One sample test</h3>
+
+<p>For the one sample t-test where \(\delta = \lvert\bar{x} - \mu\rvert\), we plug the below and solve for n with some algebra:</p>
+
+\[SE = \frac{\sigma}{\sqrt{n}}\]
+
+<p>The derived formula is:</p>
+
+\[n =\frac{(Z_{1-\alpha/2} + Z_{power})^2\sigma^2}{\delta^2}\]
+
+<h3 id="two-sample-test">Two sample test</h3>
+
+<p>For the two sample test where \(\delta = \lvert\bar{x_1} - \bar{x_2}\rvert\), we plug the below:</p>
+
+\[SE = \sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{rn_2}},\newline
+\text{where r is ratio of group 2 to group 1 size}\]
+
+<p>The derived formula is [4]:</p>
+
+\[n_1 = \frac{(r+1)}{r}\frac{\sigma^2(Z_{power}+Z_{\alpha/2})^2}{\delta^2}\]
+
+<p>If r=1 (equal groups), then</p>
+
+\[n_1 = \frac{2\sigma^2(Z_{power}+Z_{\alpha/2})^2}{\delta^2}\]
+
+<h3 id="paired-test">Paired test</h3>
+
+<p>The formula for the paired test is [4]:</p>
+
+\[n = \frac{\sigma_d^2(Z_{power}+Z_{\alpha/2})^2}{\delta^2},\newline
+\text{where}~\sigma_d^2~\text{is the standard deviation of the within-pair difference.}\]
+
+<h1 id="for-the-proportion">For the proportion</h1>
+<p>Getting a confidence interval,</p>
+
+\[n = \frac{Z_{1-\alpha/2}^2p(1-p)}{E^2}\]
+
+<p>One sample test,</p>
+
+\[n =\frac{(Z_{1-\alpha/2} + Z_{power})^2p(1-p)}{\delta^2}\]
+
+<p>Two sample test [4],</p>
+
+\[n_1 = \frac{(r+1)}{r}\frac{(Z_{power}+Z_{\alpha/2})^2\{p_1(1-p_1)+p_2(1-p_2)\}}{\delta^2}\]
+
+<p>Note:</p>
+<ul>
+  <li>All the above with regard to the hypothesis testing assumes two-tailed test; if we do one-tailed test, \(Z_{1-\alpha}\) used, intead of \(Z_{1-\alpha/2}\).</li>
+  <li>If the standard deviation of the population is unknown and the sample size is small, the formulation depends on the t distribution. It causes a problem because critical values of the t distribution depneds on degrees of freedom, which depends on the sample size which we are trying to estimate. <a href="https://www.itl.nist.gov/div898/handbook/prc/section2/prc222.htm">This document describes how to manage this issue.</a></li>
+</ul>
+
+<h1 id="adjustment">Adjustment</h1>
+<p>While we have looked around a collection of formulas and may feel quite ready, we need to be aware of situations where those formulas will not work well, and some adjustment is necessary [5].</p>
+
+<p>The frequently found adjustment is use of the finite population correction factor when we draw a sample from a finite small population. It multiplies the obtained sample size with the factor: n_final = factor * n.</p>
+
+\[n_{finit\_pop} = \frac{n}{1+(\frac{n-1}{N})} = \frac{nN}{n+(N-1)}\newline
+\text{where N is the population size.}\]
+
+<h1 id="wrapping-up">Wrapping up</h1>
+
+<p>We have looked around formulas for sample size calculation that are most commonly mentioned. Athough a bit of difference exists in detail according to study designs, they share the same fundamental that was reviewed at the beginning of this post. Considering the fact that there are many other versions, the knowledge covered here may be a quite small fraction of the whole body of work. However, this much knowlege seems enough for us to enter values into sample size calculators being aware of what we are doing.</p>
+
+<h1 id="reference">Reference:</h1>
+<ol>
+  <li>Whitehead AL, Julious SA, Cooper CL, Campbell MJ. Estimating the sample size for a pilot randomised trial to minimise the overall trial sample size for the external pilot and main trial for a continuous outcome variable. Stat Methods Med Res. 2016 Jun; 25(3):1057-73. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4876429/">(link)</a></li>
+  <li>Bell ML, Whitehead AL, Julious SA. Guidance for using pilot studies to inform the design of intervention trials with continuous outcomes. Clin Epidemiol. 2018;10:153-157. <a href="https://www.dovepress.com/guidance-for-using-pilot-studies-to-inform-the-design-of-intervention--peer-reviewed-fulltext-article-CLEP">(link)</a></li>
+  <li>WISE, Claremont Graduate University. Power Calculations for One-Sample Z Test in Power Tutorial. <a href="https://wise1.cgu.edu/power/computing.asp">(link)</a></li>
+  <li>Kristin L. Sainani. Lecture 11 of course hrp259. <a href="https://web.stanford.edu/~kcobb/hrp259/">(link)</a></li>
+  <li>Monitoring &amp; Evaluation. Sample Size Calculation. <a href="http://monitoringevaluation.weebly.com/sample-size-adjustments.html">(link)</a></li>
+</ol>
+</section>
+  
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+
+    </div>
+    
+<script src="/blog-site/assets/js/katex_init.js"></script>
+
+
+
+<footer class="site-footer">
+	<p class="text">© 2022 ・ Jisoo Lee
+</p>
+</footer>
+
+
+  </body>
+</html>
