@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+	<meta charset="utf-8">
+	<title>Feature Scaling, Min-Max and Z-Score Normalization | Jisoo Lee</title>
+	<meta name="description"
+		content="Feature scaling is making features take similar ranges of values. In this post, I will talk about when it is necessary and then look into two most frequently...">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="/blog-site/assets/css/main.css">
+
+	<!--Favicon-->
+	<link rel="shortcut icon" href="/blog-site/assets/favicon.ico" type="image/x-icon">
+
+	<!-- Canonical -->
+	<link rel="canonical" href="/blog-site/2022/09/09/feature-scaling-min-max-z-score.html">
+
+	<!-- RSS -->
+	<link rel="alternate" type="application/atom+xml" title="Jisoo Lee"
+		href="/blog-site/feed.xml" />
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+	<!-- Google Fonts -->
+	
+	<link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic" rel="stylesheet"
+		type="text/css">
+	
+
+	<!-- KaTeX -->
+	
+	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css"
+		integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+
+	<script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"
+		integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ"
+		crossorigin="anonymous"></script> -->
+
+	 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"> -->
+	 
+	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+	 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+	 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"></script>
+	 <script>
+		 document.addEventListener("DOMContentLoaded", function() {
+			 renderMathInElement(document.body, {
+				 // ...options...
+			 });
+		 });
+	 </script>
+	
+
+	<!-- Google Analytics -->
+	
+
+<!-- Begin section for dataframe table formatting -->
+<style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+		overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 0.7em;
+        line-height: 1.2;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 0.3em;
+    }
+    table.dataframe td {
+      padding: 0.3em;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+
+
+	table.dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    table.dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    table.dataframe thead th {
+        text-align: left;
+    }
+
+	.notebook_output pre {
+		font-size: 0.8em;
+		border: 1;
+		line-height: 1.2;
+	}
+
+	.highlighter-rouge pre{
+		margin-bottom: 1.5em;
+		padding: 1.2em;
+	}
+
+</style>
+<!-- End section for dataframe table formatting -->
+
+</head>
+  <body>
+    <header class="site-header">
+	<div class="branding">
+		
+		<h1 class="site-title">
+			<a href="/blog-site/">Jisoo Lee</a>
+		</h1>
+	</div>
+	<nav class="site-nav">
+		<ul>
+			
+			
+			
+			
+			
+			<li>
+				<a class="page-link" href="/blog-site/about/">
+					About
+				</a>
+			</li>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- Social icons from Font Awesome, if enabled  -->
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	<a href="https://github.com/jisooleeworks" title="Follow on GitHub">
+		<i class="fab fa-fw fa-github"></i>
+	</a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Search bar -->
+            
+		</ul>
+	</nav>
+
+</header>
+
+    <div class="content">
+      <article >
+  <header style="background-image: url('/blog-site/')">
+    <h1 class="title">Feature Scaling, Min-Max and Z-Score Normalization</h1>
+    
+    <p class="meta">
+      September 9, 2022
+      
+    </p>
+  </header>
+  <section class="post-content"><p>Feature scaling is making features take similar ranges of values. In this post, I will talk about when it is necessary and then look into two most frequently mentioned methods, min-max normalization and z-score nomalization. Finally, several other tehniques will be introduced briefly including mean normalization, robust scalar, and scaling to unit length. Examples accompany to help understand effects of each method, which are made with the Python and scikit-learn APIs.</p>
+
+<p>Before diving into details, I would like to talk about the confusion due to naming discrepancies. Given the below, it seems that ‘scaling’ is ‘normalizing’, and ‘normalizing’ is ‘scaling’:</p>
+<ul>
+  <li>“Feature scaling is a method used to normalize the range of independent variables or features of data.” [1]</li>
+  <li>“The goal of normalization is to transform features to be on a similar scale.” [2]</li>
+</ul>
+
+<p>People often use them interchangeably (e.g, Min-Max Normalization [3] and Min-Max Scaling [4])</p>
+
+<p>Meanwhile, we can find many documents online that use the term, ‘normalization’, to indicate a particular scaling/normalizing method that is often called ‘min-max scaling’ or ‘min-max normalization’, typically contrasting it to other scaling/normalizing method, ‘standardization’, which is also called ‘z-score normalization’ [5][6][7].</p>
+
+<p>Given the inconsistent naming, we may need some extra info to figure out what exactly it means when we run into the term, ‘normalization’, in materials dealing with feature scaling.</p>
+
+<h1 id="when-should-we-do-feature-scaling">When should we do feature scaling?</h1>
+<p>There are two cases often mentioned as reasons for scaling: (1) to prevent feature bias when using distance-based models, and (2) to improve the performance of gradient descent [1][8][9].</p>
+<ol>
+  <li>Distance-based models
+Models that use distances between data points like KNN, K-means, PCA, and SVM should do normalization. If there is a feature having a wide range of values, the distance will be dominated by this feature. So we make features be on a similar scale that each feature contributes approximately proportionately to the final distance. You can witness its benefit in the example made by Brownlee; it demonstarates that the KMM modeling brings different accuracy results with a not-scaled (that is, raw) and scaled data.</li>
+  <li>Gradient descent-based optimization algorithms
+Scaling brings benefit to models like linear regression that use gradient descent for optimization, since gradient descent converges much faster.</li>
+</ol>
+
+<h1 id="method">Method</h1>
+<p>How can we make features take similar ranges of values? While there are many others, you may run into Z-score normalization and Min-Max normalization most often when you search for feature scaling methods. I cautiously anticipate that they are most often used in practices. Let’s first look at the brief description of each of them and then comparisons focusing on when to use which one.</p>
+
+<h2 id="z-score-normalization-often-called-standardization">Z-score normalization (often called Standardization)</h2>
+<p>This rescales the ranges of features so that they have distribution with 0 mean value and 1 standard deviation value. The formula is:</p>
+
+\[x' = \frac{x-\bar{x}}{\sigma}\]
+
+<h2 id="min-max-normalization">Min-Max normalization</h2>
+<p>This rescales values to a fixed range, usually [0, 1] or [-1, 1]. The formula for a min-max of [0, 1] is:</p>
+
+\[x' = \frac{x-min(x)}{max(x) - min(x))}\]
+
+<p>The formula to rescale to a range of [a, b] is:</p>
+
+\[x' = a + \frac{(x-min(x))(b-a)}{max(x) - min(x))}\]
+
+<h2 id="z-score-normalization-vs-min-max-normalization">Z-score normalization vs. Min-Max normalization</h2>
+<p>(1) Min-Max normalization is affected by outliers much, and Standardization is much less affected by outliers. I found a nice demonstration on this aspect in the Codecademy website [10]. Here is my replication and summary of it. First, suppose a dataset of 100 houses with two variables, the number of rooms and the total years of the house. The number of rooms ranges between 1 and 20. The years of 99 houses range between 0 and 40, and one is 100 years old – an outlier. The below compares results of scaling:</p>
+
+<p><img src="/blog-site/assets/img/2022-09-09-feature-scaling-min-max-z-score/houses_raw.png" alt="Raw Data" />
+<img src="/blog-site/assets/img/2022-09-09-feature-scaling-min-max-z-score/houses_minmax.png" alt="Min-Max Normalization" />
+<img src="/blog-site/assets/img/2022-09-09-feature-scaling-min-max-z-score/houses_zscore.png" alt="Z-Score Normalization" /></p>
+
+<p>With min-max normalization, the 99 values of the age variable are located between 0 and 0.4, while all the values of the number of rooms are spread between 0 and 1. With z-score normalization, most (99 or 100) values are located between about -1.5 to 1.5 or -2 to 2, which are similiar ranges.</p>
+
+<p>Note: I ran into a blog post saying that Min-Max normalization is not affected by outliers and Standardization is. I guess that the author means the bounding range of Min-Max normalization results and the unbounding range of Standardization.</p>
+
+<p>(2) Often, Standardization is recommended to use when the feature distribution is Normal or Gaussian, and Min-Max normalization, when it is not [11]. Min-Max normalization just changes the range of data and Standardization changes it radically, that is, does not transform the underlying distribution structure of the data. I interprete that this is why it is OK to apply Standardization to normally distributed data (since the normal data would end up the normal data), but not recommended to apply it to non-normal data.</p>
+
+<p>However, it seems there is no hard and fast rules. Here is Brownlee’s suggestion [11]:</p>
+<blockquote>
+  <p>Predictive modeling problems can be complex, and it may not be clear how to best scale input data. If in doubt, normalize the input sequence. If you have the resources, explore modeling with the raw data, standardized data, and normalized data and see if there is a beneficial difference in the performance of the resulting model.</p>
+</blockquote>
+
+<p>Let’s look at a few other scaling methods.</p>
+
+<h2 id="mean-normalization">Mean normalization</h2>
+<p>This rescales the values to a range of [-1, 1] with 0 average value. That is, it results in a distribution centered at 0, with its minimum and maximum values within the range of -1 to 1.</p>
+
+\[x' = \frac{x-\bar{x}}{max(x) - min(x)}\]
+
+<h2 id="robust-scalar-scaling-to-median-and-quantiles">Robust Scalar (Scaling to median and quantiles)</h2>
+<p>This uses the median and quantiles. It is less affected by outliers than the Min-Max.</p>
+
+\[x' = \frac{x-x_{median}}{IQR}\]
+
+<h2 id="scaling-to-unit-length">Scaling to unit length</h2>
+<p>It rescales the components of a feature vector so that the length of the scaled vector is 1. One of two norm types is used; that is, divide each compoment by either the Manhattan distance (l1 norm) or the Euclidean distance (l2 norm) of the vector.</p>
+
+<h1 id="wrapping-up">Wrapping up</h1>
+<p>I hope that I perform deeper survey and enough experiments to figure out kind of my own guidance, if any, for choosing a suitable scaling method like Hale is doing[12], although it seems not achievable to definite rules[13]. However, knowing on the underlying math behind models\scaling methods will be definitly helpful in saving time and understanding results.</p>
+
+<h1 id="references">References</h1>
+<ol>
+  <li>https://en.wikipedia.org/wiki/Feature_scaling</li>
+  <li>https://developers.google.com/machine-learning/data-prep/transform/normalization</li>
+  <li>https://www.geeksforgeeks.org/ml-feature-scaling-part-2/</li>
+  <li>https://medium.com/@isalindgren313/transformations-scaling-and-normalization-420b2be12300</li>
+  <li>https://www.statology.org/standardization-vs-normalization/</li>
+  <li>https://www.geeksforgeeks.org/normalization-vs-standardization/</li>
+  <li>https://towardsdatascience.com/normalization-vs-standardization-quantitative-analysis-a91e8a79cebf</li>
+  <li>https://www.analyticsvidhya.com/blog/2020/04/feature-scaling-machine-learning-normalization-standardization/</li>
+  <li>https://medium.com/greyatom/why-how-and-when-to-scale-your-features-4b30ab09db5e</li>
+  <li>https://www.codecademy.com/article/normalization</li>
+  <li>https://machinelearningmastery.com/standardscaler-and-minmaxscaler-transforms-in-python/</li>
+  <li>https://towardsdatascience.com/scale-standardize-or-normalize-with-scikit-learn-6ccc7d176a02</li>
+  <li>https://www.kdnuggets.com/2019/04/normalization-vs-standardization-quantitative-analysis.html/2</li>
+</ol>
+</section>
+  
+
+</article>
+
+<!-- Disqus -->
+
+
+<!-- Post navigation -->
+
+
+    </div>
+    
+<script src="/blog-site/assets/js/katex_init.js"></script>
+
+
+
+<footer class="site-footer">
+	<p class="text">© 2022 ・ Jisoo Lee
+</p>
+</footer>
+
+
+  </body>
+</html>

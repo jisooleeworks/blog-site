@@ -259,7 +259,7 @@
 \[SE = \sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{rn_2}},\newline
 \text{where r is ratio of group 2 to group 1 size}\]
 
-<p>The derived formula is [4]:</p>
+<p>With some algebra, we can obtain the following [4]:</p>
 
 \[n_1 = \frac{(r+1)}{r}\frac{\sigma^2(Z_{power}+Z_{\alpha/2})^2}{\delta^2}\]
 
@@ -275,15 +275,15 @@
 \text{where}~\sigma_d^2~\text{is the standard deviation of the within-pair difference.}\]
 
 <h1 id="for-the-proportion">For the proportion</h1>
-<p>Getting a confidence interval,</p>
+<p>For a study to get a confidence interval,</p>
 
 \[n = \frac{Z_{1-\alpha/2}^2p(1-p)}{E^2}\]
 
-<p>One sample test,</p>
+<p>For one sample test,</p>
 
 \[n =\frac{(Z_{1-\alpha/2} + Z_{power})^2p(1-p)}{\delta^2}\]
 
-<p>Two sample test [4],</p>
+<p>For two sample test [4],</p>
 
 \[n_1 = \frac{(r+1)}{r}\frac{(Z_{power}+Z_{\alpha/2})^2\{p_1(1-p_1)+p_2(1-p_2)\}}{\delta^2}\]
 
@@ -293,17 +293,17 @@
   <li>If the standard deviation of the population is unknown and the sample size is small, the formulation depends on the t distribution. It causes a problem because critical values of the t distribution depneds on degrees of freedom, which depends on the sample size which we are trying to estimate. <a href="https://www.itl.nist.gov/div898/handbook/prc/section2/prc222.htm">This document describes how to manage this issue.</a></li>
 </ul>
 
-<h1 id="adjustment">Adjustment</h1>
+<h1 id="adjustments">Adjustments</h1>
 <p>While we have looked around a collection of formulas and may feel quite ready, we need to be aware of situations where those formulas will not work well, and some adjustment is necessary [5].</p>
 
-<p>The frequently found adjustment is use of the finite population correction factor when we draw a sample from a finite small population. It multiplies the obtained sample size with the factor: n_final = factor * n.</p>
+<p>When we draw a sample from a finite small population, it is suggested to apply the finite population correction factor. The derived formula is as follows [6]:</p>
 
 \[n_{finit\_pop} = \frac{n}{1+(\frac{n-1}{N})} = \frac{nN}{n+(N-1)}\newline
 \text{where N is the population size.}\]
 
 <h1 id="wrapping-up">Wrapping up</h1>
 
-<p>We have looked around formulas for sample size calculation that are most commonly mentioned. Athough a bit of difference exists in detail according to study designs, they share the same fundamental that was reviewed at the beginning of this post. Considering the fact that there are many other versions, the knowledge covered here may be a quite small fraction of the whole body of work. However, this much knowlege seems enough for us to enter values into sample size calculators being aware of what we are doing.</p>
+<p>We have looked around formulas for sample size calculation that are most commonly mentioned. Athough a bit of difference exists in detail according to study designs, they share the same fundamental that was reviewed at the beginning of this post. Although the knowledge covered here may be a small fraction of the whole body of work on the sample size, it should be fairly enough for confident use of existing tools.</p>
 
 <h1 id="reference">Reference:</h1>
 <ol>
@@ -312,6 +312,7 @@
   <li>WISE, Claremont Graduate University. Power Calculations for One-Sample Z Test in Power Tutorial. <a href="https://wise1.cgu.edu/power/computing.asp">(link)</a></li>
   <li>Kristin L. Sainani. Lecture 11 of course hrp259. <a href="https://web.stanford.edu/~kcobb/hrp259/">(link)</a></li>
   <li>Monitoring &amp; Evaluation. Sample Size Calculation. <a href="http://monitoringevaluation.weebly.com/sample-size-adjustments.html">(link)</a></li>
+  <li>Cochran, William G. Sampling techniques. John Wiley &amp; Sons, 1977.</li>
 </ol>
 </section>
   
