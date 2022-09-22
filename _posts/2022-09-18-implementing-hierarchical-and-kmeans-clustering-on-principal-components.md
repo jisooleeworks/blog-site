@@ -13,7 +13,7 @@ This description is guided by Asish Biswas' worked example [1, 2, 3], which aims
 * Occupation -- categorical, 0: unemployed, 1: official, 2: management
 * Settlement size -- categorical, 0: small city, 1: mid city, 2: big city
 
-I will first talk about initial data exploration and do preprocessing. Then, I will show implementation of the clusterings one by one and then compare results of them. You can find full implementation and code in [my github repository](https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb). 
+I will first talk about initial data exploration and do preprocessing. Then, I will show implementation of the clusterings one by one and then compare results of them. You can find full implementation and code in my [github repository](https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb). 
 
 # Data Exploration and Preprocessing
 Let's first look at several rows of the dataset to get familar with it.
@@ -211,7 +211,7 @@ I first obtain a new dataset by transforming the original scaled dataset on the 
 pca_scores = pca.transform(data_sd)
 linkages_pca = hierarchy.linkage(pca_scores, method='ward')
 ```
-I do not bring a dendrogram of the result here; you can find it in [my github repository](https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb). If you see it, you will find that making four groups is a reasonable decision. 
+I do not bring a dendrogram of the result here; you can find it in my [github repository](https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb). If you see it, you will find that making four groups is a reasonable decision. 
 
 I plot the segments with respect to the first two components as below.
 
@@ -288,10 +288,7 @@ All people of Segment 4 were graduated from university or the higher. Two-thirds
 I have showed how to implement the main clustering methods, hierarchical and KMean clustering combined with PCA. When use the hierarchical clustering, you find out the appropriate number of clusters by looking at a dendrogram. If use the KMean clustering, the elbow graph can help you pick the number of clusters. We have found that the obtained segments are distintive each other, and it suggests usefulness of the clustering methods in segmenting customers.
 
 # References
-1. Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-1-5c2d93066f82
-2. Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-2-689b81a7e86d
-3. Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-3-e81a79181d07
-4. Elitsa Kaloyanova. What Is Principal Components Analysis? https://365datascience.com/tutorials/python-tutorials/principal-components-analysis/
-
-
-
+1. Asish Biswas. [Customer Segmentation with Python (Implementing STP framework - part 1/5)](https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-1-5c2d93066f82)
+2. Asish Biswas. [Customer Segmentation with Python (Implementing STP Framework - Part 2/5](https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-2-689b81a7e86d)
+3. Asish Biswas. [Customer Segmentation with Python (Implementing STP Framework - Part 3/5)](https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-3-e81a79181d07)
+4. Elitsa Kaloyanova. [What Is Principal Components Analysis?](https://365datascience.com/tutorials/python-tutorials/principal-components-analysis/)
