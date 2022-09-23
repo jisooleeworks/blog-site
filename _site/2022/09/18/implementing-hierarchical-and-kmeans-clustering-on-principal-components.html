@@ -223,7 +223,7 @@
   <li>Settlement size – categorical, 0: small city, 1: mid city, 2: big city</li>
 </ul>
 
-<p>I will first talk about initial data exploration and do preprocessing. Then, I will show implementation of the clusterings one by one and then compare results of them. You can find full implementation and code in <a href="https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb">my github repository</a>.</p>
+<p>I will first talk about initial data exploration and do preprocessing. Then, I will show implementation of the clusterings one by one and then compare results of them. You can find full implementation and code in my <a href="https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb">github repository</a>.</p>
 
 <h1 id="data-exploration-and-preprocessing">Data Exploration and Preprocessing</h1>
 <p>Let’s first look at several rows of the dataset to get familar with it.</p>
@@ -416,7 +416,7 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pca_scores</span> <span class="o">=</span> <span class="n">pca</span><span class="p">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data_sd</span><span class="p">)</span>
 <span class="n">linkages_pca</span> <span class="o">=</span> <span class="n">hierarchy</span><span class="p">.</span><span class="n">linkage</span><span class="p">(</span><span class="n">pca_scores</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">'ward'</span><span class="p">)</span>
 </code></pre></div></div>
-<p>I do not bring a dendrogram of the result here; you can find it in <a href="https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb">my github repository</a>. If you see it, you will find that making four groups is a reasonable decision.</p>
+<p>I do not bring a dendrogram of the result here; you can find it in my <a href="https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb">github repository</a>. If you see it, you will find that making four groups is a reasonable decision.</p>
 
 <p>I plot the segments with respect to the first two components as below.</p>
 
@@ -493,12 +493,11 @@
 
 <h1 id="references">References</h1>
 <ol>
-  <li>Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-1-5c2d93066f82</li>
-  <li>Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-2-689b81a7e86d</li>
-  <li>Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-3-e81a79181d07</li>
-  <li>Elitsa Kaloyanova. What Is Principal Components Analysis? https://365datascience.com/tutorials/python-tutorials/principal-components-analysis/</li>
+  <li>Asish Biswas. <a href="https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-1-5c2d93066f82">Customer Segmentation with Python (Implementing STP framework - part 1/5)</a></li>
+  <li>Asish Biswas. <a href="https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-2-689b81a7e86d">Customer Segmentation with Python (Implementing STP Framework - Part 2/5</a></li>
+  <li>Asish Biswas. <a href="https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-3-e81a79181d07">Customer Segmentation with Python (Implementing STP Framework - Part 3/5)</a></li>
+  <li>Elitsa Kaloyanova. <a href="https://365datascience.com/tutorials/python-tutorials/principal-components-analysis/">What Is Principal Components Analysis?</a></li>
 </ol>
-
 </section>
   
 

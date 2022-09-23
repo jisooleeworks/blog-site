@@ -5,7 +5,7 @@
     <atom:link href="/blog-site/feed.xml" rel="self" type="application/rss+xml"/>
     <link>http://localhost:4000/blog-site/</link>
     <description>Data analytics blog</description>
-    <pubDate>Wed, 21 Sep 2022 13:43:32 -0700</pubDate>
+    <pubDate>Fri, 23 Sep 2022 09:13:08 -0700</pubDate>
     
       <item>
         <title>Implementing Hierarchical and KMeans Clustering on Principal Components</title>
@@ -24,7 +24,7 @@
   &lt;li&gt;Settlement size – categorical, 0: small city, 1: mid city, 2: big city&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;I will first talk about initial data exploration and do preprocessing. Then, I will show implementation of the clusterings one by one and then compare results of them. You can find full implementation and code in &lt;a href=&quot;https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb&quot;&gt;my github repository&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I will first talk about initial data exploration and do preprocessing. Then, I will show implementation of the clusterings one by one and then compare results of them. You can find full implementation and code in my &lt;a href=&quot;https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb&quot;&gt;github repository&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h1 id=&quot;data-exploration-and-preprocessing&quot;&gt;Data Exploration and Preprocessing&lt;/h1&gt;
 &lt;p&gt;Let’s first look at several rows of the dataset to get familar with it.&lt;/p&gt;
@@ -217,7 +217,7 @@
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pca_scores&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pca&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data_sd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;linkages_pca&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hierarchy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linkage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pca_scores&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;ward&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;I do not bring a dendrogram of the result here; you can find it in &lt;a href=&quot;https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb&quot;&gt;my github repository&lt;/a&gt;. If you see it, you will find that making four groups is a reasonable decision.&lt;/p&gt;
+&lt;p&gt;I do not bring a dendrogram of the result here; you can find it in my &lt;a href=&quot;https://github.com/jisooleeworks/blog-code/blob/main/implement_clustering.ipynb&quot;&gt;github repository&lt;/a&gt;. If you see it, you will find that making four groups is a reasonable decision.&lt;/p&gt;
 
 &lt;p&gt;I plot the segments with respect to the first two components as below.&lt;/p&gt;
 
@@ -294,12 +294,11 @@
 
 &lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
 &lt;ol&gt;
-  &lt;li&gt;Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-1-5c2d93066f82&lt;/li&gt;
-  &lt;li&gt;Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-2-689b81a7e86d&lt;/li&gt;
-  &lt;li&gt;Asish Biswas. https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-3-e81a79181d07&lt;/li&gt;
-  &lt;li&gt;Elitsa Kaloyanova. What Is Principal Components Analysis? https://365datascience.com/tutorials/python-tutorials/principal-components-analysis/&lt;/li&gt;
+  &lt;li&gt;Asish Biswas. &lt;a href=&quot;https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-1-5c2d93066f82&quot;&gt;Customer Segmentation with Python (Implementing STP framework - part 1/5)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Asish Biswas. &lt;a href=&quot;https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-2-689b81a7e86d&quot;&gt;Customer Segmentation with Python (Implementing STP Framework - Part 2/5&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Asish Biswas. &lt;a href=&quot;https://medium.com/towards-data-science/customer-segmentation-with-python-implementing-stp-framework-part-3-e81a79181d07&quot;&gt;Customer Segmentation with Python (Implementing STP Framework - Part 3/5)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Elitsa Kaloyanova. &lt;a href=&quot;https://365datascience.com/tutorials/python-tutorials/principal-components-analysis/&quot;&gt;What Is Principal Components Analysis?&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-
 </description>
         <pubDate>Sun, 18 Sep 2022 00:00:00 -0700</pubDate>
       </item>
